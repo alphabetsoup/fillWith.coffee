@@ -1,17 +1,18 @@
 jQuery(document).ready(function($) {
-    var urlroot = "https://rawgit.com/alphabetsoup/fillWith.coffee/master/";
+    var urlrootnoproto = "rawgit.com/alphabetsoup/fillWith.coffee/master/";
+    var urlroot = "https://" + urlrootnoproto;
     // load mocha
     $("head").prepend("<link>");;
     var css = $("head").children(":first");
     css.attr({
       rel:  "stylesheet",
       type: "text/plain",
-      href: urlroot + "mocha/mocha.css"
+      href: "//" + urlrootnoproto + "mocha/mocha.css"
     });
     // assume jQuery has already loaded, otherwise this won't run.
     $.getScript(urlroot+'chai/chai.js');
     $.getScript(urlroot+'mocha/mocha.js', function() {
-            $('<div />').appendTo('body').attr('id','mocha');
+            $('<div />').prependTo('body').attr('id','mocha');
             mocha.setup('bdd');
         });
     $.getScript(urlroot+'js/regex-select.js');

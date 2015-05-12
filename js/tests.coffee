@@ -113,4 +113,4 @@ runTests = (doc, verify, data) ->
     mocha.run()
 
 $(document).ready ->
-    runTests $(window), verifydata[window.location.href], testdata
+    runTests $("body"), verifydata[window.location.href], testdata
