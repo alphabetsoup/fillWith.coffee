@@ -1,7 +1,11 @@
 # fillWith.coffee
+
 Usage:
+
     jQuery("#myPage").fillWith options
+
 where
+
     options =
         "PersonalDetails.Honorific" : "Mr.",
         "PersonalDetails.FirstName" : "Steve",
