@@ -52,7 +52,7 @@ testdata =
     "AddressDetails.WorkAddress.Country" : "United States"
     
 verifydata =
-    "bpi-loader.html" :
+    "https://info.bpiexpressonline.com/bpiprod/eolappli.nsf/CreditCardApplicationForm?OpenForm" :
         "PersonalDetails.Honorific" : "input[name='Honorific']"
         "PersonalDetails.FirstName" : "input[name='FirstName']"
         "PersonalDetails.MiddleName" : "input[name='Middlename']"
@@ -104,13 +104,14 @@ verifydata =
         "AddressDetails.WorkAddress.Country" : "United States"
 
 $(document).ready ->
-    $("#SelectPage button").click () ->
-        d = new Date
-        $("#Testframe").attr "src", $("#SelectPage select").val()+"?"+d.getMinutes()+d.getSeconds()
-    $("#Testframe").on "load", ->
-        console.log "Attempting to get contents of iframe."
-        window.iframedom = $("#Testframe").contents()
-        runTests($("#Testframe").contents(), verifydata[$("#SelectPage select").val()], testdata)
+    #$("#SelectPage button").click () ->
+    #    d = new Date
+    #    $("#Testframe").attr "src", $("#SelectPage select").val()+"?"+d.getMinutes()+d.getSeconds()
+    #$("#Testframe").on "load", ->
+    #    console.log "Attempting to get contents of iframe."
+    #    window.iframedom = $("#Testframe").contents()
+    #    runTests($("#Testframe").contents(), verifydata[$("#SelectPage select").val()], testdata)
+    runTests($(window), verifydata[window.location.href], testdata)
 
 runTests = (doc, verify, data) ->
     # populate form with test data

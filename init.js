@@ -1,17 +1,17 @@
 jQuery(document).ready(function($) {
     var urlroot = "https://rawgit.com/alphabetsoup/fillWith.coffee/master/";
     // load mocha
-    $("head").append("<link>");;
-    var css = $("head").children(":last");
+    $("head").prepend("<link>");;
+    var css = $("head").children(":first");
     css.attr({
       rel:  "stylesheet",
       type: "text/plain",
       href: urlroot + "mocha/mocha.css"
     });
     // assume jQuery has already loaded, otherwise this won't run.
-    $('<div />').appendTo('body').attr('id','mocha');
     $.getScript(urlroot+'chai/chai.js');
     $.getScript(urlroot+'mocha/mocha.js', function() {
+            $('<div />').appendTo('body').attr('id','mocha');
             mocha.setup('bdd');
         });
     $.getScript(urlroot+'js/regex-select.js');
@@ -21,9 +21,6 @@ jQuery(document).ready(function($) {
     $('<script />').appendTo('body')
                    .attr('type','text/coffeescript')
                    .attr('src',urlroot+'js/tests.coffee');
-    //    $('<script />').appendTo('body')
-    //                   .attr('type','text/javascript')
-    //                   .attr('src',"http://cdn.rawgit.com/jashkenas/coffeescript/1.9.2/extras/coffee-script.js");
     $.getScript("https://github.com/jashkenas/coffee-script/raw/master/extras/coffee-script.js", function() {
 
         var runScripts,

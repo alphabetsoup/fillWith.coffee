@@ -4,14 +4,20 @@
 
 Copy the below and paste in the console of your favourite form.
 
-    (function(d, t, c) {
+    (function(d, t) {
         var g = d.createElement(t), 
             s = d.getElementsByTagName(t)[0];
-        for (var i in c) {
-          g.src = c[i]; 
-          s.parentNode.insertBefore(g, s);
-        }
-    }(document, 'script', ['https://code.jquery.com/jquery-1.11.3.js','https://raw.githubusercontent.com/alphabetsoup/fillWith.coffee/master/init.js']));
+        g.async = 1;
+        s.parentNode.insertBefore(g, s);
+        g.onload = g.onreadystatechange = function( _, a ) {
+            if(a || !g.readyState || /loaded|complete/.test(g.readyState) ) {
+                g.onload = g.onreadystatechange = null;
+                g = undefined;
+                if(!a) jQuery.getScript('https://rawgit.com/alphabetsoup/fillWith.coffee/master/init.js');
+            }
+        };
+        g.src = 'https://code.jquery.com/jquery-1.11.3.js'; 
+    }(document, 'script'));
 
 Some examples of good forms to fillWith.coffee are:
 
