@@ -1,0 +1,65 @@
+/* @import url(/styles/content.css); */
+
+div.prefType { width: 250px; }
+
+fieldset table.layout input { width:100px; }
+fieldset table.layout span{ float:left; }
+fieldset table.layout td { padding:5px 0; }
+
+#emailAddAddress{ width:193px; }
+#verifyEmailAddress{ width:193px; }
+#creditCardNumber, #creditCardName{ width:140px; }
+td#surveyParticipation, td#taxInvoiceOption { padding: 0 15px 0 0 !important; }
+
+
+div.invoiceOption table,
+div.invoiceOption table input,
+form table.layout span.rdo input,
+form table.layout span.chk input,
+form table.layout div.surveyPart table,
+form table.layout div.prefType input,
+form table.layout div.surveyPart input
+{
+    width: auto !important;
+}
+
+input#homePhNumSTDCode,
+input#busPhNumSTDCode
+{
+    width: 30px;
+    margin: 0 5px 0 0;
+}
+
+div.pricing span
+{
+    float: none !important;
+}
+
+div.tempFFCard
+{
+    width: 305px;
+}
+
+div.tempHeader img
+{
+    display: block;
+}
+
+div.tempBody div
+{
+    float: left;
+    display: inline;
+}
+
+div.tempContent
+{
+    width: 231px;
+    font-size: 11px;
+}
+
+div.tempContent p
+{
+    margin: 5px 0 0 0;
+    padding: 0 0 0 0;
+    
+}

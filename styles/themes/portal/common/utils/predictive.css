@@ -1,0 +1,162 @@
+/* Predictive Text */
+div.predictiveText
+{
+    float: left;
+    display: inline;
+    background: transparent url(/img/common/icon/o_ptext.gif) no-repeat bottom right;
+    *background: transparent url(/img/common/icon/o_ptext.gif) no-repeat center right;
+}
+
+div.predictiveTextWrapper
+{
+    zoom: 1;
+    position: relative;
+    display: none;
+    z-index: 99;
+}
+
+div.predictiveText img
+{
+    cursor: pointer;
+}
+
+body .wrapper #main input.predictiveTextField
+{
+    float: none !important;
+}
+
+img.predictiveTextToggle
+{
+    width: 19px;
+    height: 17px;
+}
+
+span.predictiveTextToggle
+{
+    /*background: transparent url(/img/common/icon/form-sprites.png) no-repeat center -300px;*/
+    width: 19px;
+    height: 17px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+img.predictiveTextClose
+{
+    position: absolute;
+    z-index: 99;
+    left: 10px;
+    top: 12px;
+}
+
+div.predictiveTextBox
+{
+    margin: 0 0 0 0;
+    padding: 0;
+    border: 1px solid #ccc;
+    background-color: #f4f4f4;
+    height:200px;
+    *height: 165px;
+    overflow:auto;
+    position: absolute;
+    z-index: 98;
+    left: 0;
+}
+
+div.predictiveTextBox div.clearit
+{
+    padding: 0 0 0 30px;
+}
+
+div.predictiveTextBox ul
+{
+    margin: 10px 0 0 0;
+    padding: 0;
+    list-style: none;
+    list-style-position: outside;
+}
+
+div.predictiveTextBox li
+{
+    padding: 0 0 10px 0;
+    list-style: none;
+    font-size: 11px;
+    background: transparent none;
+    margin: 0;
+}
+
+div.predictiveTextBox a:link,
+div.predictiveTextBox a:visited
+{
+    color: #333;
+    text-decoration:none;
+}
+
+div.predictiveTextBox a:hover,
+div.predictiveTextBox a:focus
+{
+    color:#dd0000;
+}
+
+div.predictiveTextBox a span.aCode  
+{
+    color:#767676;
+}
+
+div.predictiveTextBox a:hover span.aCode  
+{
+    color:#dd0000;
+}
+
+div.predictiveTextBox a.selected:link,
+div.predictiveTextBox a.selected:visited
+{
+    font-weight: bold;
+    color: #dd0000;
+}
+
+div.predictiveTextBox a.selected span.aCode  
+{
+    color: #dd0000;
+}
+
+div.toCityBoxHidden
+{
+    display: none;
+}
+
+div.toCityBoxSingleColumn
+{
+    display: block;
+    width: 300px; 
+}
+
+div.toCityBoxDoubleColumns ul
+{
+    width: 95%;
+}
+
+div.toCityBoxNoMatches
+{
+    display: block;
+    width: 480px;
+    padding: 0 0 0 25px;
+}
+
+div.toCityBoxNoMatches p
+{
+    padding: 2px 0 0 0;
+    margin: 0 0 0 0;
+    font-size: 11px;
+}
+
+div.toCityBoxDoubleColumns
+{
+    
+    width: 480px; 
+    display: block;
+}
+
+div.toCityBoxDoubleColumns ul
+{
+    width: 215px;
+}

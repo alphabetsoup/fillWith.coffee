@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+    <script src="http://code.jquery.com/jquery-1.2.3.min.js"></script>
+<body>
+    <script>
+        var urlext = '/fflyer/do/dyns/joinff';
+        var urlbase = 'www.qantas.com.au';
+        var urlprotocol = 'https';
+        $.getJSON('http://whateverorigin.org/get?url=' + encodeURIComponent(urlprotocol+"://"+urlbase+urlext) + '&callback=?', function(data){
+            console.log("Adding form content...");
+            var html = ""+data.contents;
+ 
+            /* Replace relative links to absolute ones */
+            //html = html.replace(new RegExp('(<link[^>]+)href="/', 'g'),  '$1href="//'+urlbase+'/');
+            html = html.replace(new RegExp('(<link[^>]+)href="/', 'g'),  '$1href="'); // css import breaks firefox
+            html = html.replace(new RegExp('(href|src)="/([^/])', 'g'),  '$1="'+urlprotocol+"://"+urlbase+'/$2');
+            console.log(html);
+ 
+            $("#siteLoader").html(html);
+            console.log("Form content added.");
+        });
+    </script>
+    <div id="siteLoader">
+        <i>Loading&hellip;</i>
+    </div>
+</body>
+</html>
