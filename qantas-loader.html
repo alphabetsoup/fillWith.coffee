@@ -14,7 +14,6 @@
             //html = html.replace(new RegExp('(<link[^>]+)href="/', 'g'),  '$1href="//'+urlbase+'/');
             html = html.replace(new RegExp('(<link[^>]+)href="/', 'g'),  '$1href="'); // css import breaks firefox
             html = html.replace(new RegExp('(href|src)="/([^/])', 'g'),  '$1="'+urlprotocol+"://"+urlbase+'/$2');
-            console.log(html);
  
             $("#siteLoader").html(html);
             console.log("Form content added.");
