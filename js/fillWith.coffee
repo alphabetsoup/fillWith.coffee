@@ -67,7 +67,7 @@
         matchers: [
             new InputMatcher(
                 "PersonalDetails.Honorific", ((_) ->
-                    _.find("input:regex(name,^(honorific|prefix)$))").add _.find _.find("label:regex(text:,^(honorific|prefix)$)").attr "for"
+                    _.find("input:regex(name,^(honorific|prefix)$)").add _.find _.find("label:regex(text:,^(honorific|prefix)$)").attr "for"
                 ), (v) ->
                     v
             )
@@ -87,7 +87,7 @@
             )
             new InputMatcher(
                 "PersonalDetails.MiddleName", ((_) ->
-                    _.find("input:regex(name,(^(?middle.*)initial$))")
+                    _.find("input:regex(name,(^(?=middle.*)initial$))")
                     .add _.find _.find("label:regex(text:,^middle\\s*names?$)").attr "for"
                 ), (v) ->
                     console.log "Initial "
@@ -101,6 +101,8 @@
                 ), (v) ->
                     v
             )
+        ]
+            ###
             new InputMatcher(
                 "PersonalDetails.BirthDate.Day", ((_) ->
                     _.find("input:regex(name,^$))").add _.find _.find("label:regex(text:,^$)").attr "for"
@@ -371,7 +373,7 @@
                 ), (v) ->
                     v
             )
-        ]
+            ###
 
         constructor: (el, options) ->
             @options = $.extend({}, @defaults, options)
