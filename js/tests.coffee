@@ -54,10 +54,10 @@ testdata =
 verifydata =
     "url" : "garnier-loader.html",
     "selectors" :
-        "PersonalDetails.Honorific" : "input[name='FirstName']",
+        "PersonalDetails.Honorific" : "input[name='Honorific']",
         "PersonalDetails.FirstName" : "input[name='FirstName']",
-        "PersonalDetails.MiddleName" : "Roberto",
-        "PersonalDetails.LastName" : "McQueen",
+        "PersonalDetails.MiddleName" : "input[name='Middlename']",
+        "PersonalDetails.LastName" : "input[name='Surname']",
         "PersonalDetails.BirthDate.Day" : "12",
         "PersonalDetails.BirthDate.Month" : "05",
         "PersonalDetails.BirthDate.Year" : "1973",
@@ -113,7 +113,7 @@ jQuery(document).ready ->
         runTests(jQuery("#Testframe").contents(), verifydata, testdata)
 
 runTests = (doc, verify, data) ->
-    # pop form with test data
+    # populate form with test data
     doc.fillWith data
     describe "First Name", () ->
         describe "#val()", () ->
