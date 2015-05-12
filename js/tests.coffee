@@ -105,11 +105,11 @@ verifydata =
 
 runTests = (doc, verify, data) ->
     # populate form with test data
-    doc.fillWith data
-    describe "First Name", () ->
-        describe "#val()", () ->
-            it "should be populated by the test data", () ->
-                expect(doc.find(verify["PersonalDetails.FirstName"]).val()).to.equal data["PersonalDetails.FirstName"]
+    describe "First Name", ->
+        before ->
+            doc.fillWith data
+        it "should be populated by the test data", ->
+            expect(doc.find(verify["PersonalDetails.FirstName"]).val()).to.equal data["PersonalDetails.FirstName"]
     mocha.run()
 
 $(document).ready ->

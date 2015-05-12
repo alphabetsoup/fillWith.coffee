@@ -7,8 +7,8 @@
         match: (_) ->
             #$([])
             @_match_fn _
-        populate: (v) ->
-            @_populate_fn v
+        populate: (el,v) ->
+            @_populate_fn el,v
 
     class FillWith
 
@@ -68,52 +68,71 @@
             new InputMatcher(
                 "PersonalDetails.Honorific", ((_) ->
                     _.find("input:regex(name,^(honorific|prefix)$)").add _.find _.find("label:regex(text:,^(honorific|prefix)$)").attr "for"
-                ), (v) ->
-                    v
+                ), (el,v) ->
+                    el.val v
             )
             new InputMatcher(
                 "PersonalDetails.FirstName", ((_) ->
                     _.find("input:regex(name,(^first.*name$|^name$))")
                     .add _.find _.find("label:regex(text:,^first\\s*name$)").attr "for"
-                ), (v) ->
-                    v
+                ), (el,v) ->
+                    el.val v
             )
             new InputMatcher(
                 "PersonalDetails.MiddleName", ((_) ->
                     _.find("input:regex(name,(^middle.*names?$))")
                     .add _.find _.find("label:regex(text:,^middle\\s*names?$)").attr "for"
-                ), (v) ->
-                    v
+                ), (el,v) ->
+                    el.val v
             )
             new InputMatcher(
                 "PersonalDetails.MiddleName", ((_) ->
                     _.find("input:regex(name,(^(?=middle.*)initial$))")
                     .add _.find _.find("label:regex(text:,^middle\\s*names?$)").attr "for"
-                ), (v) ->
-                    console.log "Initial "
-                    console.log v
-                    v.substring 0, 1
+                ), (el,v) ->
+                    el.val v.substring 0, 1
             )
             new InputMatcher(
                 "PersonalDetails.LastName", ((_) ->
                     _.find("input:regex(name,(^middle.*names?$))")
                     .add _.find _.find("label:regex(text:,^last\\s*names?$)").attr "for"
-                ), (v) ->
-                    v
+                ), (el,v) ->
+                    el.val v
             )
-        ]
-            ###
             new InputMatcher(
                 "PersonalDetails.BirthDate.Day", ((_) ->
-                    _.find("input:regex(name,^$))").add _.find _.find("label:regex(text:,^$)").attr "for"
-                ), (v) ->
-                    v
+                    _.find("input:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$))")
+                    .add _.find _.find("label:regex(text:,(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$)").attr "for"
+                ), (el,v) ->
+                    if el.is "input"
+                        el.val v
+                    else if el.is "select"
+                        # parse select options
+                        el.children("option").each (i,e) -> 
+                            # try to match numeric only, then alpha, then abbrev alpha
+                            daymatch = new Regexp "0?"+v+"$", "gi"
+                            res = $(e).val().match daymatch
+                            if res.length == 1
+                                $(e).prop 'selected', true
+                                return false
+                            else if res.length > 1
+                                console.log "Failed BirthDate.Day match. Option is:"
+                                console.log $(e).val()
+                                return false
+                            true
             )
+            ###
             new InputMatcher(
                 "PersonalDetails.BirthDate.Month", ((_) ->
                     _.find("input:regex(name,^$))").add _.find _.find("label:regex(text:,^$)").attr "for"
-                ), (v) ->
-                    v
+                ), (e,v) ->
+                    if el.is "input"
+                        el.val v
+                    else if el.is "select"
+                        # parse select options
+                        optvals = el.children("option").map (i,e) -> $(e).val()
+                        # try to match numeric only, then alpha, then abbrev alpha
+                        $.each optvals, (i,e) ->
             )
             new InputMatcher(
                 "PersonalDetails.BirthDate.Year", ((_) ->
@@ -127,6 +146,7 @@
                 ), (v) ->
                     v
             )
+        ]
             new InputMatcher(
                 "AddressDetails.HomeAddress.LevelNumber", ((_) ->
                     _.find("input:regex(name,^$))").add _.find _.find("label:regex(text:,^$)").attr "for"
@@ -379,11 +399,6 @@
             @options = $.extend({}, @defaults, options)
             @$el = $(el)
 
-        # Additional plugin methods go here
-        # myMethod: (echo) ->
-        #     @$el.html(@options.paramA + ': ' + echo)
-
-
     # Define the plugin
     $.fn.extend fillWith: (option, args...) ->
         @each ->
@@ -403,10 +418,10 @@
                 el.css({'background-color' : '#00CC99'})
                 if data.options[matcher.name]
                     # set the value
-                    if el.is "input"
-                        el.val matcher.populate data.options[matcher.name]
-                    else if el.is "select"
-                        console.log "select not supported"
+                    matcher.populate el.val, data.options[matcher.name]
+                    #if el.is "input"
+                    #else if el.is "select"
+                    #    console.log "select not supported"
                 else
                     console.log "fillWith option not found: " + matcher.name
 
