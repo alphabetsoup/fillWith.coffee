@@ -121,7 +121,8 @@
                                 return false
                             true
             )
-            ###
+        ]
+        ###
             new InputMatcher(
                 "PersonalDetails.BirthDate.Month", ((_) ->
                     _.find("input:regex(name,^$))").add _.find _.find("label:regex(text:,^$)").attr "for"
@@ -393,13 +394,12 @@
                 ), (v) ->
                     v
             )
-            ###
+        ###
 
         constructor: (el, options) ->
             @options = $.extend({}, @defaults, options)
             @$el = $(el)
 
-    # Define the plugin
     $.fn.extend fillWith: (option, args...) ->
         @each ->
             $this = $(this)
