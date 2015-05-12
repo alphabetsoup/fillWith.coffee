@@ -103,16 +103,6 @@ verifydata =
         "AddressDetails.WorkAddress.PostalCode" : "91608"
         "AddressDetails.WorkAddress.Country" : "United States"
 
-$(document).ready ->
-    #$("#SelectPage button").click () ->
-    #    d = new Date
-    #    $("#Testframe").attr "src", $("#SelectPage select").val()+"?"+d.getMinutes()+d.getSeconds()
-    #$("#Testframe").on "load", ->
-    #    console.log "Attempting to get contents of iframe."
-    #    window.iframedom = $("#Testframe").contents()
-    #    runTests($("#Testframe").contents(), verifydata[$("#SelectPage select").val()], testdata)
-    runTests($(window), verifydata[window.location.href], testdata)
-
 runTests = (doc, verify, data) ->
     # populate form with test data
     doc.fillWith data
@@ -121,3 +111,6 @@ runTests = (doc, verify, data) ->
             it "should be populated by the test data", () ->
                 expect(doc.find(verify["PersonalDetails.FirstName"]).val()).to.equal data["PersonalDetails.FirstName"]
     mocha.run()
+
+$(document).ready ->
+    runTests $(window), verifydata[window.location.href], testdata
