@@ -113,14 +113,15 @@
                             # try to match numeric only, then alpha, then abbrev alpha
                             daymatch = new RegExp "0?"+v+"$", "gi"
                             res = $(e).val().match daymatch
-                            if res.length == 1
+                            if !res
+                                return true
+                            else if res.length == 1
                                 $(e).prop 'selected', true
                                 return false
                             else if res.length > 1
                                 console.log "Failed BirthDate.Day match. Option is:"
                                 console.log $(e).val()
                                 return false
-                            true
             )
         ]
 
