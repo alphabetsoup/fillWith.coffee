@@ -137,4 +137,7 @@ runTests = (doc, verify, data) ->
     mocha.run()
 
 $(document).ready ->
-    runTests $("body"), verifydata[window.location.href], testdata
+    if (typeof test_staging == "undefined") 
+        runTests $("body"), verifydata[window.location.href], testdata
+    else
+        runTests $("body"), verifydata["https://info.bpiexpressonline.com/bpiprod/eolappli.nsf/CreditCardApplicationForm?OpenForm"], testdata
