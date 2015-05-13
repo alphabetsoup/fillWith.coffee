@@ -13,7 +13,7 @@ Copy the below and paste in the console of your favourite form.
             if(a || !g.readyState || /loaded|complete/.test(g.readyState) ) {
                 g.onload = g.onreadystatechange = null;
                 g = undefined;
-                if(!a) jQuery.getScript('https://rawgit.com/alphabetsoup/fillWith.coffee/master/init.js');
+                if(!a) jQuery.getScript('https://rawgit.com/alphabetsoup/fillWith.coffee/master/init-tests.js');
             }
         };
         g.src = 'https://code.jquery.com/jquery-1.11.3.js'; 
