@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
     var urlroot;
-    if (typeof urlrootnoproto == "undefined") {
+    if (typeof test_staging != "undefined") {
       urlrootnoproto = "rawgit.com/alphabetsoup/fillWith.coffee/master/";
       urlroot = "https://" + urlrootnoproto;
     } else {
