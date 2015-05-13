@@ -106,7 +106,7 @@
                 ), (el,v) ->
                     if $(el).is "input"
                         $(el).val v
-                    else if el.is "select"
+                    else if $(el).is "select"
                         # parse select options
                         $(el).children("option").each (i,e) -> 
                             # try to match numeric only, then alpha, then abbrev alpha
