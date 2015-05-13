@@ -1,11 +1,7 @@
 jQuery(document).ready(function($) {
     var urlroot;
-    if (typeof test_staging == "undefined") {
-      urlrootnoproto = "rawgit.com/alphabetsoup/fillWith.coffee/master/";
-      urlroot = "https://" + urlrootnoproto;
-    } else {
-      urlroot = urlrootnoproto;
-    }
+    urlrootnoproto = "rawgit.com/alphabetsoup/fillWith.coffee/master/";
+    urlroot = "https://" + urlrootnoproto;
     // load mocha
     // css
     var mochacssurl = urlroot + "mocha/mocha.css";
@@ -20,7 +16,7 @@ jQuery(document).ready(function($) {
         }
     };
     loadCSS(mochacssurl);
-    loadCSS(extracssurl);
+  //  loadCSS(extracssurl);
     /*
     $("head").prepend("<link>");;
     var css = $("head").children(":first");
@@ -31,6 +27,7 @@ jQuery(document).ready(function($) {
     });
     */
     // assume jQuery has already loaded, otherwise this won't run.
+    /*
     if (typeof test_staging != undefined) {
         $('<script />').appendTo('head')
                        .attr('type','text/javacsript')
@@ -46,13 +43,14 @@ jQuery(document).ready(function($) {
             }
         }, 200);
     } else {
+    */
         $.getScript(urlroot+'chai/chai.js');
         $.getScript(urlroot+'mocha/mocha.js', function() {
                 $('<div />').prependTo('body').attr('id','mocha');
                 mocha.setup('bdd');
             });
         $.getScript(urlroot+'js/regex-select.js');
-    }
+    //}
     $('<script />').appendTo('body')
                    .attr('type','text/coffeescript')
                    .attr('src',urlroot+'js/fillWith.coffee?_='+$.now());

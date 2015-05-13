@@ -29,18 +29,24 @@ function _doClick(v, o, t, h) {
 }
 // -->
 </script>
+<link rel='stylesheet' href='mocha/mocha.css' type='text/css' media='screen' crossorigin='anonymous' />
 <script language="JavaScript" type="text/javascript">
     var urlrootnoproto = "";
     var test_staging = true;
 </script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.js"></script>
+  <script type="text/javascript" src="js/regex-select.js"></script>
   <script type="text/javascript" src="chai/chai.js"></script>
   <script type="text/javascript" src="mocha/mocha.js"></script>
   <script type="text/coffeescript" src="js/fillWith.coffee"></script>
   <script type="text/coffeescript" src="js/tests.coffee"></script>
-  <script type="text/javascript" src="init.js"></script>
+  <script type="text/javascript" src="https://cdn.rawgit.com/jashkenas/coffeescript/master/extras/coffee-script.js"></script>
+<script language="JavaScript" type="text/javascript">
+                mocha.setup('bdd');
+</script>
 </head>
 <body text="#000000" bgcolor="#FFFFFF">
+    <div id="mocha"></div>
 
 <form method="post" action="/bpiprod/eolappli.nsf/CreditCardApplicationForm?OpenForm&amp;Seq=1" name="_CreditCardApplicationForm">
 <input type="hidden" name="__Click" value="0"><body onload='form.reset();'>
