@@ -111,7 +111,7 @@
                         # parse select options
                         $(el).children("option").each (i,e) -> 
                             # try to match numeric only, then alpha, then abbrev alpha
-                            daymatch = new Regexp "0?"+v+"$", "gi"
+                            daymatch = new RegExp "0?"+v+"$", "gi"
                             res = $(e).val().match daymatch
                             if res.length == 1
                                 $(e).prop 'selected', true
