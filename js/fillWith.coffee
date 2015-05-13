@@ -149,7 +149,7 @@
                                 'nov'
                                 'dec'
                             ]
-                            monthmatch = new RegExp "^0?"+v+"$|^"+months_a[parseInt $(e).val(), 10], "gi"
+                            monthmatch = new RegExp "^0?"+v+"$|^"+months_a[parseInt v, 10], "gi"
                             res = $(e).val().match monthmatch
                             if !res
                                 return true
