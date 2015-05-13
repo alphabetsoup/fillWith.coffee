@@ -18,10 +18,10 @@ jQuery(document).ready(function($) {
     $.getScript(urlroot+'js/regex-select.js');
     $('<script />').appendTo('body')
                    .attr('type','text/coffeescript')
-                   .attr('src',urlroot+'js/fillWith.coffee?'+$.now());
+                   .attr('src',urlroot+'js/fillWith.coffee?_='+$.now());
     $('<script />').appendTo('body')
                    .attr('type','text/coffeescript')
-                   .attr('src',urlroot+'js/tests.coffee?'+$.now());
+                   .attr('src',urlroot+'js/tests.coffee?_='+$.now());
     $.getScript("https://github.com/jashkenas/coffee-script/raw/master/extras/coffee-script.js", function() {
 
         var runScripts,
