@@ -60,7 +60,7 @@ jQuery(document).ready(function($) {
     $.getScript("https://cdn.rawgit.com/jashkenas/coffeescript/master/extras/coffee-script.js", function() {
 
         var timer = setInterval( function(){ 
-            if (CoffeeScript !== undefined) {
+            if (typeof CoffeeScript != "undefined") {
                 clearInterval(timer);
 
                 var runScripts,
