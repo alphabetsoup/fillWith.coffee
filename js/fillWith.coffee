@@ -80,7 +80,7 @@
             )
             new InputMatcher(
                 "PersonalDetails.MiddleName", ((_) ->
-                    _.find("input:regex(name,(^middle.*names?$))")
+                    _.find("input:regex(name,^middle.*names?$)")
                     .add _.find _.find("label:regex(text:,^middle\\s*names?$)").attr "for"
                 ), (el,v) ->
                     $(el).val v
@@ -94,8 +94,8 @@
             )
             new InputMatcher(
                 "PersonalDetails.LastName", ((_) ->
-                    _.find("input:regex(name,(^middle.*names?$))")
-                    .add _.find _.find("label:regex(text:,^last\\s*names?$)").attr "for"
+                    _.find("input:regex(name,^(last|sur).*names?$)")
+                    .add _.find _.find("label:regex(text:,^(last|sur)\\s*names?$)").attr "for"
                 ), (el,v) ->
                     $(el).val v
             )
