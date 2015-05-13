@@ -145,7 +145,7 @@
                 el.css({'background-color' : '#00CC99'})
                 if data.options[matcher.name]
                     # set the value
-                    matcher.populate el.val, data.options[matcher.name]
+                    matcher.populate el, data.options[matcher.name]
                     #if el.is "input"
                     #else if el.is "select"
                     #    console.log "select not supported"
