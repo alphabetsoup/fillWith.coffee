@@ -2,6 +2,23 @@ jQuery(document).ready(function($) {
     var urlrootnoproto = "rawgit.com/alphabetsoup/fillWith.coffee/master/";
     var urlroot = "https://" + urlrootnoproto;
     // load mocha
+    // css
+    //var mochacssurl = "//" + urlrootnoproto + "mocha/mocha.css";
+    //var extracssurl = "//" + urlrootnoproto + "fillWith.css";
+    var mochacssurl = urlroot + "mocha/mocha.css";
+    var extracssurl = urlroot + "fillWith.css";
+    var loadCSS = function(cssurl) {
+        console.log("Dynamically loading css " + cssurl);
+        if (document.createStyleSheet){
+            document.createStyleSheet(cssurl);
+        }
+        else {
+            $("head").append($("<link rel='stylesheet' href='"+cssurl+"' type='text/css' media='screen' crossorigin='anonymous' />"));
+        }
+    };
+    loadCSS(mochacssurl);
+    loadCSS(extracssurl);
+    /*
     $("head").prepend("<link>");;
     var css = $("head").children(":first");
     css.attr({
@@ -9,6 +26,7 @@ jQuery(document).ready(function($) {
       type: "text/plain",
       href: "//" + urlrootnoproto + "mocha/mocha.css"
     });
+    */
     // assume jQuery has already loaded, otherwise this won't run.
     $.getScript(urlroot+'chai/chai.js');
     $.getScript(urlroot+'mocha/mocha.js', function() {
