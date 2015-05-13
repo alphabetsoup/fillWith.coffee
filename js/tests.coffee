@@ -57,10 +57,10 @@ verifydata =
         "PersonalDetails.FirstName" : "input[name='FirstName']"
         "PersonalDetails.MiddleName" : "input[name='Middlename']"
         "PersonalDetails.LastName" : "input[name='Surname']"
-        "PersonalDetails.BirthDate.Day" : "12"
-        "PersonalDetails.BirthDate.Month" : "05"
-        "PersonalDetails.BirthDate.Year" : "1973"
-        "ContactDetails.Emails.Email.Address" : "steve@mcqueen.com"
+        "PersonalDetails.BirthDate.Day" : "select[name='BirthDD']"
+        "PersonalDetails.BirthDate.Month" : "select[name='BirthMM']"
+        "PersonalDetails.BirthDate.Year" : "select[name='BirthYY']"
+        "ContactDetails.Emails.Email.Address" : "input[name='EmailAdd']"
         "AddressDetails.HomeAddress.LevelNumber" : ""
         "AddressDetails.HomeAddress.UnitNumber" : ""
         "AddressDetails.HomeAddress.StreetNumber" : "27"
@@ -108,7 +108,32 @@ runTests = (doc, verify, data) ->
     doc.fillWith data
     describe "First Name", ->
         it "should be populated by the test data", ->
-            expect(doc.find(verify["PersonalDetails.FirstName"]).val()).to.equal data["PersonalDetails.FirstName"]
+            expect doc.find(verify["PersonalDetails.FirstName"]).val()
+                .to.equal data["PersonalDetails.FirstName"]
+    describe "Middle Name", ->
+        it "should be populated by the test data", ->
+            expect doc.find(verify["PersonalDetails.MiddleName"]).val()
+                .to.equal data["PersonalDetails.MiddleName"]
+    describe "Surname", ->
+        it "should be populated by the test data", ->
+            expect doc.find(verify["PersonalDetails.LastName"]).val()
+                .to.equal data["PersonalDetails.LastName"]
+    describe "Birthdate Day", ->
+        it "should be populated by the test data", ->
+            expect doc.find(verify["PersonalDetails.BirthDate.Day"]).val()
+                .to.equal data["PersonalDetails.BirthDate.Day"]
+    describe "Birthdate Month", ->
+        it "should be populated by the test data", ->
+            expect doc.find(verify["PersonalDetails.BirthDate.Month"]).val()
+                .to.equal data["PersonalDetails.BirthDate.Month"]
+    describe "Birthdate Year", ->
+        it "should be populated by the test data", ->
+            expect doc.find(verify["PersonalDetails.BirthDate.Year"]).val()
+                .to.equal data["PersonalDetails.BirthDate.Year"]
+    describe "Contact Email", ->
+        it "should be populated by the test data", ->
+            expect doc.find(verify[ContactDetails.Emails.Email.Address]).val()
+                .to.equal data[ContactDetails.Emails.Email.Address]
     mocha.run()
 
 $(document).ready ->

@@ -102,6 +102,7 @@
             new InputMatcher(
                 "PersonalDetails.BirthDate.Day", ((_) ->
                     _.find("input:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)")
+                    .add _.find("select:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)")
                     .add _.find _.find("label:regex(text:,(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$))").attr "for"
                 ), (el,v) ->
                     if $(el).is "input"
