@@ -67,43 +67,9 @@
         matchers: [
             new InputMatcher(
                 "PersonalDetails.Honorific", ((_) ->
-                    _.find("input:regex(name,^(honorific|prefix)$)").add _.find _.find("label:regex(text:,^(honorific|prefix)$)").attr "for"
-                ), (el,v) ->
-                    $(el).val v
-            )
-            new InputMatcher(
-                "PersonalDetails.FirstName", ((_) ->
-                    _.find("input:regex(name,(^first.*name$|^name$))")
-                    .add _.find _.find("label:regex(text:,^first\\s*name$)").attr "for"
-                ), (el,v) ->
-                    $(el).val v
-            )
-            new InputMatcher(
-                "PersonalDetails.MiddleName", ((_) ->
-                    _.find("input:regex(name,^middle.*names?$)")
-                    .add _.find _.find("label:regex(text:,^middle\\s*names?$)").attr "for"
-                ), (el,v) ->
-                    $(el).val v
-            )
-            new InputMatcher(
-                "PersonalDetails.MiddleName", ((_) ->
-                    _.find("input:regex(name,(^(?=middle.*)initial$))")
-                    .add _.find _.find("label:regex(text:,^middle\\s*names?$)").attr "for"
-                ), (el,v) ->
-                    $(el).val v.substring 0, 1
-            )
-            new InputMatcher(
-                "PersonalDetails.LastName", ((_) ->
-                    _.find("input:regex(name,^(last|sur).*names?$)")
-                    .add _.find _.find("label:regex(text:,^(last|sur)\\s*names?$)").attr "for"
-                ), (el,v) ->
-                    $(el).val v
-            )
-            new InputMatcher(
-                "PersonalDetails.BirthDate.Day", ((_) ->
-                    _.find("input:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)")
-                    .add _.find("select:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)")
-                    .add _.find _.find("label:regex(text:,(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$))").attr "for"
+                    _.find "input:regex(name,honorific|prefix|title)"
+                    .add _.find "select:regex(name,honorific|prefix|title)"
+                    .add _.find _.find("label:regex(text:,^(honorific|prefix)$)").attr "for"
                 ), (el,v) ->
                     if $(el).is "input"
                         $(el).val v
@@ -111,6 +77,58 @@
                         # parse select options
                         $(el).children("option").each (i,e) -> 
                             # try to match numeric only, then alpha, then abbrev alpha
+                            titlematch = new RegExp v+"\\.?$", "gi"
+                            res = $(e).val().match titlematch
+                            if !res
+                                return true
+                            if res.length == 1
+                                $(e).prop 'selected', true
+                                return false
+                            else if res.length > 1
+                                console.log "Failed Honorific match. Option is:"
+                                console.log $(e).val()
+                                return false
+            )
+            new InputMatcher(
+                "PersonalDetails.FirstName", ((_) ->
+                    _.find "input:regex(name,(^first.*name$|^name$))"
+                    .add _.find _.find("label:regex(text:,^first\\s*name$)").attr "for"
+                ), (el,v) ->
+                    $(el).val v
+            )
+            new InputMatcher(
+                "PersonalDetails.MiddleName", ((_) ->
+                    _.find "input:regex(name,^middle.*names?$)"
+                    .add _.find _.find("label:regex(text:,^middle\\s*names?$)").attr "for"
+                ), (el,v) ->
+                    $(el).val v
+            )
+            new InputMatcher(
+                "PersonalDetails.MiddleName", ((_) ->
+                    _.find "input:regex(name,(^(?=middle.*)initial$))"
+                    .add _.find _.find("label:regex(text:,^middle\\s*names?$)").attr "for"
+                ), (el,v) ->
+                    $(el).val v.substring 0, 1
+            )
+            new InputMatcher(
+                "PersonalDetails.LastName", ((_) ->
+                    _.find "input:regex(name,^(last|sur).*names?$)"
+                    .add _.find _.find("label:regex(text:,^(last|sur)\\s*names?$)").attr "for"
+                ), (el,v) ->
+                    $(el).val v
+            )
+            new InputMatcher(
+                "PersonalDetails.BirthDate.Day", ((_) ->
+                    _.find "input:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)"
+                    .add _.find "select:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)"
+                    .add _.find _.find("label:regex(text:,(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$))").attr "for"
+                ), (el,v) ->
+                    if $(el).is "input"
+                        $(el).val v
+                    else if $(el).is "select"
+                        # parse select options
+                        $(el).children("option").each (i,e) -> 
+                            # try to match numeric only
                             daymatch = new RegExp "0?"+v+"$", "gi"
                             res = $(e).val().match daymatch
                             if !res
@@ -133,8 +151,8 @@
                         $(el).val v
                     else if $(el).is "select"
                         # parse select options
-                        $(el).children("option").each (i,e) -> 
-                            # try to match numeric only, then alpha, then abbrev alpha
+                        $(el).children("option").each (i,e) ->
+                            # try to match numeric only, then alpha/abbrev alpha
                             months_a = [
                                 'jan'
                                 'feb'
@@ -158,6 +176,30 @@
                                 return false
                             else if res.length > 1
                                 console.log "Failed BirthDate.Month match. Option is:"
+                                console.log $(e).val()
+                                return false
+            )
+            new InputMatcher(
+                "PersonalDetails.BirthDate.Year", ((_) ->
+                    _.find("input:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)")
+                    .add _.find("select:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)")
+                    .add _.find _.find("label:regex(text:,year|^dob$|^d\\.o\\.b\\.?$)").attr "for"
+                ), (el,v) ->
+                    if $(el).is "input"
+                        $(el).val v
+                    else if $(el).is "select"
+                        # parse select options
+                        $(el).children("option").each (i,e) ->
+                            # try to match numeric only, then alpha, then abbrev alpha
+                            yearmatch = new RegExp "^"+v+"$", "gi"
+                            res = $(e).val().match yearmatch
+                            if !res
+                                return true
+                            else if res.length == 1
+                                $(e).prop 'selected', true
+                                return false
+                            else if res.length > 1
+                                console.log "Failed BirthDate.Year match. Option is:"
                                 console.log $(e).val()
                                 return false
             )
