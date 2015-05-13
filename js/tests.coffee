@@ -55,8 +55,8 @@ verifydata =
     "https://info.bpiexpressonline.com/bpiprod/eolappli.nsf/CreditCardApplicationForm?OpenForm" :
         "PersonalDetails.Honorific" : "input[name='Honorific']"
         "PersonalDetails.FirstName" : "input[name='FirstName']"
-        "PersonalDetails.MiddleName" : "input[name='Middlename']"
-        "PersonalDetails.LastName" : "input[name='Surname']"
+        "PersonalDetails.MiddleName" : "input[name='MiddleName']"
+        "PersonalDetails.LastName" : "input[name='LastName']"
         "PersonalDetails.BirthDate.Day" : "select[name='BirthDD']"
         "PersonalDetails.BirthDate.Month" : "select[name='BirthMM']"
         "PersonalDetails.BirthDate.Year" : "select[name='BirthYY']"
@@ -132,8 +132,8 @@ runTests = (doc, verify, data) ->
                 .to.equal data["PersonalDetails.BirthDate.Year"]
     describe "Contact Email", ->
         it "should be populated by the test data", ->
-            expect doc.find(verify[ContactDetails.Emails.Email.Address]).val()
-                .to.equal data[ContactDetails.Emails.Email.Address]
+            expect doc.find(verify["ContactDetails.Emails.Email.Address"]).val()
+                .to.equal data["ContactDetails.Emails.Email.Address"]
     mocha.run()
 
 $(document).ready ->
