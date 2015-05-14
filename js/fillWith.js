@@ -234,25 +234,18 @@
         }), new InputMatcher("PersonalDetails.BirthDate.Month", (function(_) {
           return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)").add(_.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)")).add(_.find(_.find("label:regex(text:,(birth.*(month|mm)|^dob$|^d\\.o\\.b\\.?$))").attr("for")));
         }), function(el, v) {
-          console.log("irainbow frog serpent");
-          console.log($(el));
-          console.log(typeof $(el));
           if ($(el).is("input")) {
             return $(el).val(v);
           } else if ($(el).is("select")) {
-            console.log($(el));
             return $(el).children("option").each(function(i, e) {
               var monthmatch, months_a, res;
               months_a = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
               monthmatch = new RegExp("^0?" + v + "$|^" + months_a[parseInt(v, 10) - 1], "gi");
               res = $(e).val().match(monthmatch);
               if (!res) {
-                console.log("fm");
                 return true;
               } else if (res.length === 1) {
                 $(e).prop('selected', true);
-                console.log("selected month");
-                console.log($(e));
                 return false;
               } else if (res.length > 1) {
                 console.log("Failed BirthDate.Month match. Option is:");

@@ -8,7 +8,7 @@ testdata =
     "PersonalDetails.BirthDate.Year" : "1973"
     "ContactDetails.Emails.Email.Address" : "steve@mcqueen.com"
     "AddressDetails.HomeAddress.LevelNumber" : ""
-    "AddressDetails.HomeAddress.UnitNumber" : ""
+    "AddressDetails.HomeAddress.UnitNumber" : "7"
     "AddressDetails.HomeAddress.StreetNumber" : "27"
     "AddressDetails.HomeAddress.StreetName" : "Oakmont"
     "AddressDetails.HomeAddress.StreetType" : "DRIVE"

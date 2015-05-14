@@ -53,7 +53,15 @@ escRE = (str) ->
 #                 a standard list of input data
 # @usage          new InputMatcher data.input | [data.input1,data.input2], (match), (el,vals)
 # @author         Laurence Davies
-# @todo           Standardise the match function so that a callback is not needed.
+# @todo           Use a better match function.
+#                 Propose to use a multi-pass matcher
+#                   1) Use a loose jQuery input/select + regex selector to obtain
+#                      a list of likely fields.
+#                   2) Evaluate likelihood of each field using an n-gram style weight
+#                      applied to the field name and surrounding html elements.
+#                      Can use negative weights
+#                   3) Return the first n largest matches, where n is specified 
+#                      (usually 1).
 class InputMatcher
     constructor: (@names, @_match_fn, @_populate_fn) ->
     hasFields: (fields) ->
@@ -224,14 +232,10 @@ class InputMatcher
                     .add _.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)")
                     .add _.find _.find("label:regex(text:,(birth.*(month|mm)|^dob$|^d\\.o\\.b\\.?$))").attr "for"
                 ), (el,v) ->
-                    console.log "irainbow frog serpent"
-                    console.log $(el)
-                    console.log typeof $(el)
                     if $(el).is "input"
                         $(el).val v
                     else if $(el).is "select"
                         # parse select options
-                        console.log $ el
                         $(el).children("option").each (i,e) ->
                             # try to match numeric only, then alpha/abbrev alpha
                             months_a = [
@@ -251,12 +255,9 @@ class InputMatcher
                             monthmatch = new RegExp "^0?"+v+"$|^"+months_a[parseInt(v,10)-1], "gi"
                             res = $(e).val().match monthmatch
                             if !res
-                                console.log "fm"
                                 return true
                             else if res.length == 1
                                 $(e).prop 'selected', true
-                                console.log "selected month"
-                                console.log $(e)
                                 return false
                             else if res.length > 1
                                 console.log "Failed BirthDate.Month match. Option is:"
