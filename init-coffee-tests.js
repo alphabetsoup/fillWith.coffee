@@ -16,12 +16,13 @@ jQuery(document).ready(function($) {
         }
     };
     loadCSS(mochacssurl);
-    $.getScript(urlroot+'chai/chai.js');
-    $.getScript(urlroot+'mocha/mocha.js', function() {
+    $.getScript(urlroot+'chai/chai.js', function() {
+        $.getScript(urlroot+'mocha/mocha.js', function() {
             $('<div />').prependTo('body').attr('id','mocha');
             mocha.setup('bdd');
         });
-    $.getScript(urlroot+'js/regex-select.js');
+    });
+    //$.getScript(urlroot+'js/regex-select.js');
     
     $('<script />').appendTo('body')
                    .attr('type','text/coffeescript')

@@ -20,11 +20,11 @@ jQuery(document).ready(function($) {
         $.getScript(urlroot+'mocha/mocha.js', function() {
              $('<div />').prependTo('body').attr('id','mocha');
              mocha.setup('bdd');
-            $.getScript(urlroot+'js/regex-select.js',function() {
+            //$.getScript(urlroot+'js/regex-select.js',function() {
                 $.getScript(urlroot+'js/fillWith.js', function() {
                     $.getScript(urlroot+'js/tests.js');
                 });
-            });
+            //});
         });
     });
 });

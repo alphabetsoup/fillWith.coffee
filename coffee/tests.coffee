@@ -94,6 +94,12 @@ verifydata =
         "AddressDetails.HomeAddress.BuildingName" : ""
 
 runTests = (doc, verify, data) ->
+    convertMonthToNumber = (mon) ->
+        if typeof mon is 'string' && mon.length
+            new Date Date.parse mon+" 1, 2015"
+                .getMonth()+1
+        else
+            0
     expect = chai.expect
     # test helpers
     describe "Make Address Line 1", ->
@@ -137,7 +143,7 @@ runTests = (doc, verify, data) ->
                 .to.equal data["PersonalDetails.BirthDate.Day"]
     describe "Birthdate Month", ->
         it "should be populated by the test data", ->
-            expect doc.find(verify["PersonalDetails.BirthDate.Month"]).val()
+            expect convertMonthToNumber doc.find(verify["PersonalDetails.BirthDate.Month"]).val()
                 .to.equal data["PersonalDetails.BirthDate.Month"]
     describe "Birthdate Year", ->
         it "should be populated by the test data", ->
@@ -155,18 +161,14 @@ runTests = (doc, verify, data) ->
 
 $(document).ready ->
     testformurl = if typeof test_staging == "undefined" then window.location.href else "https://info.bpiexpressonline.com/bpiprod/eolappli.nsf/CreditCardApplicationForm?OpenForm"
-    $ '<button />'
-        .prependTo 'body'
-        .text "Run tests"
-        .click ->
-            if testformurl of verifydata
-                runTests $("body"), verifydata[testformurl], testdata
-            else
-                $ 'body'
-                    .fillWith data
     fillbox = $ '<div />'
+        .css 'margin', '5px'
+        .css 'border', '1px solid red'
+        .css 'border-radius', '3px'
     $ '<textarea />'
         .attr 'id', 'filldata'
+        .attr 'rows', '5'
+        .attr 'cols', '40'
         .text '{"PersonalDetails.Honorific":"Mr.","PersonalDetails.FirstName":"Steve","PersonalDetails.MiddleName":"Roberto","PersonalDetails.LastName":"McQueen","PersonalDetails.BirthDate.Day":"12","PersonalDetails.BirthDate.Month":"05","PersonalDetails.BirthDate.Year":"1973","ContactDetails.Emails.Email.Address":"steve@mcqueen.com","AddressDetails.HomeAddress.LevelNumber":"","AddressDetails.HomeAddress.UnitNumber":"","AddressDetails.HomeAddress.StreetNumber":"27","AddressDetails.HomeAddress.StreetName":"Oakmont","AddressDetails.HomeAddress.StreetType":"DRIVE","AddressDetails.HomeAddress.Suburb":"Brentwood","AddressDetails.HomeAddress.AdministrativeArea":"California","AddressDetails.HomeAddress.PostalCode":"94513","AddressDetails.HomeAddress.Country":"United States","AddressDetails.HomeAddress.BuildingName":"","AddressDetails.PostalAddress.POBox":"555","AddressDetails.PostalAddress.LevelNumber":"","AddressDetails.PostalAddress.UnitNumber":"","AddressDetails.PostalAddress.StreetNumber":"18","AddressDetails.PostalAddress.StreetName":"Oak","AddressDetails.PostalAddress.StreetType":"STREET","AddressDetails.PostalAddress.Suburb":"Los Angeles","AddressDetails.PostalAddress.AdministrativeArea":"CA","AddressDetails.PostalAddress.PostalCode":"90096","AddressDetails.PostalAddress.Country":"United States","AddressDetails.PostalAddress.BuildingName":"","AddressDetails.BillingAddress.POBox":"","AddressDetails.BillingAddress.LevelNumber":"6","AddressDetails.BillingAddress.UnitNumber":"34","AddressDetails.BillingAddress.StreetNumber":"1419","AddressDetails.BillingAddress.StreetName":"Westwood","AddressDetails.BillingAddress.StreetType":"BOULEVARD","AddressDetails.BillingAddress.Suburb":"Los Angeles","AddressDetails.BillingAddress.AdministrativeArea":"CA","AddressDetails.BillingAddress.PostalCode":"90024","AddressDetails.BillingAddress.Country":"United States","AddressDetails.WorkAddress.POBox":"","AddressDetails.WorkAddress.LevelNumber":"","AddressDetails.WorkAddress.UnitNumber":"12a","AddressDetails.WorkAddress.StreetNumber":"100","AddressDetails.WorkAddress.StreetName":"Universal City","AddressDetails.WorkAddress.StreetType":"PLAZA","AddressDetails.WorkAddress.Suburb":"Universal City","AddressDetails.WorkAddress.AdministrativeArea":"CA","AddressDetails.WorkAddress.PostalCode":"91608","AddressDetails.WorkAddress.Country":"United States"}'
         .prependTo fillbox
     $ '<button />'
@@ -178,4 +180,13 @@ $(document).ready ->
             $ 'body'
                 .fillWith filldata
         .prependTo fillbox
+    $ '<button />'
+        .appendTo fillbox
+        .text "Run tests (does not use data in the box to the left)"
+        .click ->
+            if testformurl of verifydata
+                runTests $("body"), verifydata[testformurl], testdata
+            else
+                $ 'body'
+                    .fillWith data
     fillbox.prependTo 'body'

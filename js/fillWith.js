@@ -3,6 +3,23 @@
   var InputMatcher, escRE,
     slice = [].slice;
 
+  jQuery.expr[':'].regex = function(elem, index, match) {
+    var attr, matchParams, regex, regexFlags, validLabels;
+    matchParams = match[3].split(',');
+    validLabels = /^(data|css|text):/;
+    attr = {
+      method: matchParams[0].match(validLabels) ? matchParams[0].split(':')[0] : 'attr',
+      property: matchParams.shift().replace(validLabels, '')
+    };
+    regexFlags = 'ig';
+    regex = new RegExp(matchParams.join('').replace(/^s+|s+$/g, ''), regexFlags);
+    if (attr.method !== 'text') {
+      return regex.test(jQuery(elem)[attr.method](attr.property));
+    } else {
+      return regex.test(jQuery(elem)[attr.method]());
+    }
+  };
+
   window.fillWith = {
     "in": function(k, o) {
       return k in o && o[k] && o[k].length;
@@ -74,7 +91,9 @@
     };
 
     InputMatcher.prototype.match = function(_) {
-      return this._match_fn(_);
+      var mm;
+      mm = this._match_fn(_);
+      return mm;
     };
 
     InputMatcher.prototype.populate = function(el, v) {
@@ -213,20 +232,27 @@
             });
           }
         }), new InputMatcher("PersonalDetails.BirthDate.Month", (function(_) {
-          return _.find("input:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)").add(_.find("select:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)")).add(_.find(_.find("label:regex(text:,(birth.*(month|mm)|^dob$|^d\\.o\\.b\\.?$))").attr("for")));
+          return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)").add(_.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)")).add(_.find(_.find("label:regex(text:,(birth.*(month|mm)|^dob$|^d\\.o\\.b\\.?$))").attr("for")));
         }), function(el, v) {
+          console.log("irainbow frog serpent");
+          console.log($(el));
+          console.log(typeof $(el));
           if ($(el).is("input")) {
             return $(el).val(v);
           } else if ($(el).is("select")) {
+            console.log($(el));
             return $(el).children("option").each(function(i, e) {
               var monthmatch, months_a, res;
               months_a = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-              monthmatch = new RegExp("^0?" + v + "$|^" + months_a[parseInt(v, 10)], "gi");
+              monthmatch = new RegExp("^0?" + v + "$|^" + months_a[parseInt(v, 10) - 1], "gi");
               res = $(e).val().match(monthmatch);
               if (!res) {
+                console.log("fm");
                 return true;
               } else if (res.length === 1) {
                 $(e).prop('selected', true);
+                console.log("selected month");
+                console.log($(e));
                 return false;
               } else if (res.length > 1) {
                 console.log("Failed BirthDate.Month match. Option is:");
@@ -236,7 +262,7 @@
             });
           }
         }), new InputMatcher("PersonalDetails.BirthDate.Year", (function(_) {
-          return _.find("input:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)").add(_.find("select:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)")).add(_.find(_.find("label:regex(text:,year|^dob$|^d\\.o\\.b\\.?$)").attr("for")));
+          return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)").add(_.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)")).add(_.find(_.find("label:regex(text:,year|^dob$|^d\\.o\\.b\\.?$)").attr("for")));
         }), function(el, v) {
           if ($(el).is("input")) {
             return $(el).val(v);
@@ -258,9 +284,13 @@
             });
           }
         }), new InputMatcher(["AddressDetails.HomeAddress.LevelNumber", "AddressDetails.HomeAddress.UnitNumber", "AddressDetails.HomeAddress.StreetNumber", "AddressDetails.HomeAddress.StreetName", "AddressDetails.HomeAddress.StreetType", "AddressDetails.HomeAddress.BuildingName"], (function(_) {
-          return _.find("input:regex(name,(add|address)($|.*line.*(2|two)))").add(_.find(_.find("label:regex(text:,(?!post.*)(add|address)(?:.*line.*(2|two)))").attr("for")));
+          return _.find("input:regex(name,(add|address))").add(_.find(_.find("label:regex(text:,(add|address))").attr("for")));
         }), function(el, vals) {
           return $(el).val(fillWith.makeAddressLine1(vals));
+        }), new InputMatcher("ContactDetails.Emails.Email.Address", (function(_) {
+          return _.find("input:regex(name,email|^eadd)").add(_.find(_.find("label:regex(text:,email|^eadd)").attr("for")));
+        }), function(el, v) {
+          return $(el).val(v);
         })
       ];
 
@@ -293,7 +323,9 @@
               'background-color': '#00CC99'
             });
             if (matcher.hasFields(data.options)) {
-              return matcher.populate(el, data.options);
+              return $(el).each(function(i, e) {
+                return matcher.populate(e, data.options);
+              });
             } else {
               console.log("fillWith option not found: ");
               return console.log(matcher.names);

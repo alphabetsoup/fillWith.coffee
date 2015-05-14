@@ -1,3 +1,14 @@
+# Extend jQuery selectors with regex
+jQuery.expr[':'].regex = (elem, index, match) ->
+  matchParams = match[3].split(',')
+  validLabels = /^(data|css|text):/
+  attr =
+    method: if matchParams[0].match(validLabels) then matchParams[0].split(':')[0] else 'attr'
+    property: matchParams.shift().replace(validLabels, '')
+  regexFlags = 'ig'
+  regex = new RegExp(matchParams.join('').replace(/^s+|s+$/g, ''), regexFlags)
+  if attr.method != 'text' then regex.test(jQuery(elem)[attr.method](attr.property)) else regex.test(jQuery(elem)[attr.method]())
+
 # Create a root fillWjth object for static helpers
 window.fillWith =
     in: (k,o) -> k of o && o[k] && o[k].length
@@ -36,6 +47,13 @@ window.fillWith =
 escRE = (str) ->
       str.replace /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"
 
+# @name           InputMatcher
+# @description    Matches an input using a match callback and 
+#                 populates an element using a populate callback and
+#                 a standard list of input data
+# @usage          new InputMatcher data.input | [data.input1,data.input2], (match), (el,vals)
+# @author         Laurence Davies
+# @todo           Standardise the match function so that a callback is not needed.
 class InputMatcher
     constructor: (@names, @_match_fn, @_populate_fn) ->
     hasFields: (fields) ->
@@ -47,7 +65,12 @@ class InputMatcher
                 if fillWith.in n, fields then return true else return undefined
             .length
     match: (_) ->
-        @_match_fn _
+        mm = @_match_fn _
+        #console.log @names
+        #console.log mm
+        #m = mm.first()
+        #console.log m
+        mm
     populate: (el,v) ->
         # pass either a single string or a hash of keys/values to pop fn
         if typeof @names is 'string'
@@ -129,7 +152,7 @@ class InputMatcher
                         $(el).val v
                     else if $(el).is "select"
                         # parse select options
-                        $(el).children("option").each (i,e) -> 
+                        $(el).children("option").each (i,e) ->
                             # try to match numeric only, then alpha, then abbrev alpha
                             titlematch = new RegExp "^"+escRE(v)+"[^A-Za-z]?$", "gi"
                             res = $(e).val().match titlematch
@@ -197,14 +220,18 @@ class InputMatcher
             )
             new InputMatcher(
                 "PersonalDetails.BirthDate.Month", ((_) ->
-                    _.find("input:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)")
-                    .add _.find("select:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)")
+                    _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)")
+                    .add _.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)")
                     .add _.find _.find("label:regex(text:,(birth.*(month|mm)|^dob$|^d\\.o\\.b\\.?$))").attr "for"
                 ), (el,v) ->
+                    console.log "irainbow frog serpent"
+                    console.log $(el)
+                    console.log typeof $(el)
                     if $(el).is "input"
                         $(el).val v
                     else if $(el).is "select"
                         # parse select options
+                        console.log $ el
                         $(el).children("option").each (i,e) ->
                             # try to match numeric only, then alpha/abbrev alpha
                             months_a = [
@@ -221,12 +248,15 @@ class InputMatcher
                                 'nov'
                                 'dec'
                             ]
-                            monthmatch = new RegExp "^0?"+v+"$|^"+months_a[parseInt v, 10], "gi"
+                            monthmatch = new RegExp "^0?"+v+"$|^"+months_a[parseInt(v,10)-1], "gi"
                             res = $(e).val().match monthmatch
                             if !res
+                                console.log "fm"
                                 return true
                             else if res.length == 1
                                 $(e).prop 'selected', true
+                                console.log "selected month"
+                                console.log $(e)
                                 return false
                             else if res.length > 1
                                 console.log "Failed BirthDate.Month match. Option is:"
@@ -235,8 +265,8 @@ class InputMatcher
             )
             new InputMatcher(
                 "PersonalDetails.BirthDate.Year", ((_) ->
-                    _.find("input:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)")
-                    .add _.find("select:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)")
+                    _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)")
+                    .add _.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)")
                     .add _.find _.find("label:regex(text:,year|^dob$|^d\\.o\\.b\\.?$)").attr "for"
                 ), (el,v) ->
                     if $(el).is "input"
@@ -267,10 +297,17 @@ class InputMatcher
                     "AddressDetails.HomeAddress.BuildingName"
                 ]
                 , ((_) ->
-                    _.find "input:regex(name,(add|address)($|.*line.*(2|two)))"
-                    .add _.find _.find("label:regex(text:,(?!post.*)(add|address)(?:.*line.*(2|two)))").attr "for"
+                    _.find "input:regex(name,(add|address))"
+                    .add _.find _.find("label:regex(text:,(add|address))").attr "for"
                 ), (el,vals) ->
                     $(el).val fillWith.makeAddressLine1 vals
+            )
+            new InputMatcher(
+                "ContactDetails.Emails.Email.Address", ((_) ->
+                    _.find "input:regex(name,email|^eadd)"
+                    .add _.find _.find("label:regex(text:,email|^eadd)").attr "for"
+                ), (el,v) ->
+                    $(el).val v
             )
         ]
 
@@ -294,7 +331,8 @@ class InputMatcher
                 el.css({'background-color' : '#00CC99'})
                 if matcher.hasFields data.options
                     # set the value
-                    matcher.populate el, data.options
+                    $(el).each (i,e) ->
+                        matcher.populate e, data.options
                 else
                     console.log "fillWith option not found: "
                     console.log matcher.names
