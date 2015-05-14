@@ -235,23 +235,31 @@
         }), new InputMatcher("PersonalDetails.BirthDate.Month", (function(_) {
           return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month))").add(_.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month))")).add(_.find(_.find("label:regex(text:,(birth.*(month|mm)|^dob$|^d\\.o\\.b\\.?$))").attr("for")));
         }), function(el, v) {
+          var month_a_v, months_a;
           if ($(el).is("input")) {
             return $(el).val(v);
           } else if ($(el).is("select")) {
+            months_a = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+            month_a_v = months_a[parseInt(v, 10) - 1];
             return $(el).children("option").each(function(i, e) {
-              var monthmatch, months_a, res;
-              months_a = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-              monthmatch = new RegExp("^0?" + escRE(v) + "$|^" + months_a[parseInt(v, 10) - 1], "gi");
+              var month_a_el_v, monthmatch, monthmatch2, res, res2;
+              monthmatch = new RegExp("^0?" + escRE(v) + "$|^" + month_a_v, "gi");
               res = $(e).val().match(monthmatch);
               console.log("Matching " + $(e).val() + " with " + v);
+              month_a_el_v = months_a[parseInt($(e).val(), 10) - 1];
+              if (month_a_el_v != null) {
+                monthmatch2 = new RegExp("^0?" + escRE($(e).val()) + "$|^" + month_a_el_v, "gi");
+              } else {
+                monthmatch2 = new RegExp("^0?" + escRE($(e).val()) + "$", "gi");
+              }
+              res2 = v.match(monthmatch2);
+              res = res ? res : [];
+              res2 = res2 ? res2 : [];
+              res = $.merge(res, res2);
               if (!res) {
                 return true;
-              } else if (res.length === 1) {
+              } else if (res.length >= 1) {
                 $(e).prop('selected', true);
-                return false;
-              } else if (res.length > 1) {
-                console.log("Failed BirthDate.Month match. Option is:");
-                console.log($(e).val());
                 return false;
               }
             });

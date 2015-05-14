@@ -236,10 +236,7 @@ class InputMatcher
                     if $(el).is "input"
                         $(el).val v
                     else if $(el).is "select"
-                        # parse select options
-                        $(el).children("option").each (i,e) ->
-                            # try to match numeric only, then alpha/abbrev alpha
-                            months_a = [
+                        months_a = [
                                 'jan'
                                 'feb'
                                 'mar'
@@ -252,19 +249,34 @@ class InputMatcher
                                 'oct'
                                 'nov'
                                 'dec'
-                            ]
-                            monthmatch = new RegExp "^0?"+escRE(v)+"$|^"+months_a[parseInt(v,10)-1], "gi"
+                        ]
+                        month_a_v = months_a[parseInt(v,10)-1]
+                        # parse select options
+                        $(el).children("option").each (i,e) ->
+                            # try to match numeric only, then alpha/abbrev alpha
+
+                            monthmatch = new RegExp "^0?"+escRE(v)+"$|^"+month_a_v, "gi"
                             res = $(e).val().match monthmatch
                             console.log "Matching "+$(e).val()+" with "+v
+
+                            month_a_el_v = months_a[parseInt($(e).val(),10)-1]
+                            if month_a_el_v?
+                                monthmatch2 = new RegExp "^0?"+escRE($(e).val())+"$|^"+month_a_el_v, "gi"
+                            else
+                                monthmatch2 = new RegExp "^0?"+escRE($(e).val())+"$", "gi"
+                            res2 = v.match monthmatch2
+                            res = if res then res else []
+                            res2 = if res2 then res2 else []
+                            res = $.merge res, res2
                             if !res
                                 return true
-                            else if res.length == 1
+                            else if res.length >= 1
                                 $(e).prop 'selected', true
                                 return false
-                            else if res.length > 1
-                                console.log "Failed BirthDate.Month match. Option is:"
-                                console.log $(e).val()
-                                return false
+                            #else if res.length > 1
+                            #   console.log "Failed BirthDate.Month match. Option is:"
+                            #    console.log $(e).val()
+                            #    return false
             )
             new InputMatcher(
                 "PersonalDetails.BirthDate.Year", ((_) ->
