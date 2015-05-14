@@ -1,18 +1,68 @@
+# Create a root fillWjth object for static helpers
+window.fillWith =
+    in: (k,o) -> k of o && o[k] && o[k].length
+    makeAddressLine1: (data) ->
+        # street address line should fill in the format 'U 23 / 222 Chapel Street'
+        # ensure relevant data exists
+        line = ""
+        usefields =
+            ln: "AddressDetails.HomeAddress.LevelNumber"
+            un: "AddressDetails.HomeAddress.UnitNumber"
+            so: "AddressDetails.HomeAddress.StreetNumber"
+            sn: "AddressDetails.HomeAddress.StreetName"
+            st: "AddressDetails.HomeAddress.StreetType"
+            bn: "AddressDetails.HomeAddress.BuildingName"
+        useslash = false
+        if fillWith.in usefields.un, data
+            line += "U " + data[usefields.un] + " "
+            useslash = true
+        if fillWith.in usefields.ln, data
+            line += "L " + data[usefields.ln] + " "
+            useslash = true
+        if useslash
+            line += "/ "
+        if fillWith.in usefields.so, data
+            line += data[usefields.so] + " "
+        else if fillWith.in usefields.bn, data
+            line += data[usefields.bn] + " "
+        if fillWith.in usefields.sn, data
+            line += data[usefields.sn] + " "
+            if fillWith.in usefields.st, data
+                line += data[usefields.st]
+        # remove trailing space
+        line.replace /\s+$/g, ""
+
+# Escape a string for injection into a RegExp
+escRE = (str) ->
+      str.replace /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"
+
+class InputMatcher
+    constructor: (@names, @_match_fn, @_populate_fn) ->
+    hasFields: (fields) ->
+        if typeof fields is not 'array' then throw new "hasFields requires array as first argument."
+        if typeof @names is 'string'
+            return fillWith.in @names, fields
+        else if $.isArray @names
+            return 0 < $.map @names, (n) ->
+                if fillWith.in n, fields then return true else return undefined
+            .length
+    match: (_) ->
+        @_match_fn _
+    populate: (el,v) ->
+        # pass either a single string or a hash of keys/values to pop fn
+        if typeof @names is 'string'
+            return @_populate_fn el, v[@names]
+        else if $.isArray @names
+            vals = {}
+            $.each @names, (i,n) ->
+                vals[n]=v[n]
+                true
+            return @_populate_fn el, vals
+
+
 #         $('.mug').fillWith({ "PersonalDetails.FirstName" : "Steve" });
 #
 (($, window) ->
-
-    # Escape a string for injection into a RegExp
-    escRE = (str) ->
-          str.replace /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"
-
-    class InputMatcher
-        constructor: (@name, @_match_fn, @_populate_fn) ->
-        match: (_) ->
-            #$([])
-            @_match_fn _
-        populate: (el,v) ->
-            @_populate_fn el,v
 
     class FillWith
 
@@ -207,6 +257,21 @@
                                 console.log $(e).val()
                                 return false
             )
+            new InputMatcher(
+                [
+                    "AddressDetails.HomeAddress.LevelNumber"
+                    "AddressDetails.HomeAddress.UnitNumber"
+                    "AddressDetails.HomeAddress.StreetNumber"
+                    "AddressDetails.HomeAddress.StreetName"
+                    "AddressDetails.HomeAddress.StreetType"
+                    "AddressDetails.HomeAddress.BuildingName"
+                ]
+                , ((_) ->
+                    _.find "input:regex(name,(add|address)($|.*line.*(2|two)))"
+                    .add _.find _.find("label:regex(text:,(?!post.*)(add|address)(?:.*line.*(2|two)))").attr "for"
+                ), (el,vals) ->
+                    $(el).val fillWith.makeAddressLine1 vals
+            )
         ]
 
         constructor: (el, options) ->
@@ -224,19 +289,14 @@
             if typeof option == 'string'
                 data[option].apply(data, args)
 
-            console.log data.matchers
-
             $.each data.matchers, (_, matcher) ->
-                console.log matcher
                 el = matcher.match $this
                 el.css({'background-color' : '#00CC99'})
-                if data.options[matcher.name]
+                if matcher.hasFields data.options
                     # set the value
-                    matcher.populate el, data.options[matcher.name]
-                    #if el.is "input"
-                    #else if el.is "select"
-                    #    console.log "select not supported"
+                    matcher.populate el, data.options
                 else
-                    console.log "fillWith option not found: " + matcher.name
+                    console.log "fillWith option not found: "
+                    console.log matcher.names
 
 ) window.jQuery, window

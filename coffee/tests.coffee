@@ -1,5 +1,3 @@
-expect = chai.expect
-
 testdata =
     "PersonalDetails.Honorific" : "Mr."
     "PersonalDetails.FirstName" : "Steve"
@@ -61,47 +59,11 @@ verifydata =
         "PersonalDetails.BirthDate.Month" : "select[name='BirthMM']"
         "PersonalDetails.BirthDate.Year" : "select[name='BirthYY']"
         "ContactDetails.Emails.Email.Address" : "input[name='EmailAdd']"
-        "AddressDetails.HomeAddress.LevelNumber" : ""
-        "AddressDetails.HomeAddress.UnitNumber" : ""
-        "AddressDetails.HomeAddress.StreetNumber" : "27"
-        "AddressDetails.HomeAddress.StreetName" : "Oakmont"
-        "AddressDetails.HomeAddress.StreetType" : "DRIVE"
-        "AddressDetails.HomeAddress.Suburb" : "Brentwood"
-        "AddressDetails.HomeAddress.AdministrativeArea" : "California"
-        "AddressDetails.HomeAddress.PostalCode" : "94513"
-        "AddressDetails.HomeAddress.Country" : "United States"
-        "AddressDetails.HomeAddress.BuildingName" : ""
-        "AddressDetails.PostalAddress.POBox" : "555"
-        "AddressDetails.PostalAddress.LevelNumber" : ""
-        "AddressDetails.PostalAddress.UnitNumber" : ""
-        "AddressDetails.PostalAddress.StreetNumber" : "18"
-        "AddressDetails.PostalAddress.StreetName" : "Oak"
-        "AddressDetails.PostalAddress.StreetType" : "STREET"
-        "AddressDetails.PostalAddress.Suburb" : "Los Angeles"
-        "AddressDetails.PostalAddress.AdministrativeArea" : "CA"
-        "AddressDetails.PostalAddress.PostalCode" : "90096"
-        "AddressDetails.PostalAddress.Country" : "United States"
-        "AddressDetails.PostalAddress.BuildingName" : ""
-        "AddressDetails.BillingAddress.POBox" : ""
-        "AddressDetails.BillingAddress.LevelNumber" : "6"
-        "AddressDetails.BillingAddress.UnitNumber" : "34"
-        "AddressDetails.BillingAddress.StreetNumber" : "1419"
-        "AddressDetails.BillingAddress.StreetName" : "Westwood"
-        "AddressDetails.BillingAddress.StreetType" : "BOULEVARD"
-        "AddressDetails.BillingAddress.Suburb" : "Los Angeles"
-        "AddressDetails.BillingAddress.AdministrativeArea" : "CA"
-        "AddressDetails.BillingAddress.PostalCode" : "90024"
-        "AddressDetails.BillingAddress.Country" : "United States"
-        "AddressDetails.WorkAddress.POBox" : ""
-        "AddressDetails.WorkAddress.LevelNumber" : ""
-        "AddressDetails.WorkAddress.UnitNumber" : "12a"
-        "AddressDetails.WorkAddress.StreetNumber" : "100"
-        "AddressDetails.WorkAddress.StreetName" : "Universal City"
-        "AddressDetails.WorkAddress.StreetType" : "PLAZA"
-        "AddressDetails.WorkAddress.Suburb" : "Universal City"
-        "AddressDetails.WorkAddress.AdministrativeArea" : "CA"
-        "AddressDetails.WorkAddress.PostalCode" : "91608"
-        "AddressDetails.WorkAddress.Country" : "United States"
+        "AddressDetails.HomeAddress.Line1" : "input[name='ResidenceAdd']"
+        "AddressDetails.HomeAddress.Suburb" : "input[name='ResidenceAdd2']"
+        "AddressDetails.HomeAddress.AdministrativeArea" : "input[name='ResidenceAdd1']"
+        "AddressDetails.HomeAddress.PostalCode" : "select[name='ResidenceAdd3']"
+        "AddressDetails.HomeAddress.Country" : ""
     "http://www.garnier.com.au/register" :
         "PersonalDetails.Honorific" : "input[name='Honorific']"
         "PersonalDetails.FirstName" : "input[name='FirstName']"
@@ -111,16 +73,10 @@ verifydata =
         "PersonalDetails.BirthDate.Month" : "select[name='BirthMM']"
         "PersonalDetails.BirthDate.Year" : "select[name='BirthYY']"
         "ContactDetails.Emails.Email.Address" : "input[name='EmailAdd']"
-        "AddressDetails.HomeAddress.LevelNumber" : ""
-        "AddressDetails.HomeAddress.UnitNumber" : ""
-        "AddressDetails.HomeAddress.StreetNumber" : ""
-        "AddressDetails.HomeAddress.StreetName" : ""
-        "AddressDetails.HomeAddress.StreetType" : ""
-        "AddressDetails.HomeAddress.Suburb" : ""
-        "AddressDetails.HomeAddress.AdministrativeArea" : ""
-        "AddressDetails.HomeAddress.PostalCode" : ""
-        "AddressDetails.HomeAddress.Country" : ""
-        "AddressDetails.HomeAddress.BuildingName" : ""
+        "AddressDetails.HomeAddress.Line1" : "input[name='main_0$RegisterUserDetails$txtAddress1']"
+        "AddressDetails.HomeAddress.Suburb" : "input[name='main_0$RegisterUserDetails$txtCity']"
+        "AddressDetails.HomeAddress.PostalCode" : "input[name='main_0$RegisterUserDetails$txtZipCode']"
+        "AddressDetails.HomeAddress.Country" : "select[name='main_0$RegisterUserDetails$ddlCountry']"
     "https://www.qantas.com.au/fflyer/do/dyns/joinff" :
         "PersonalDetails.Honorific" : "input[name='Honorific']"
         "PersonalDetails.FirstName" : "input[name='customerNameGivenName']"
@@ -138,6 +94,29 @@ verifydata =
         "AddressDetails.HomeAddress.BuildingName" : ""
 
 runTests = (doc, verify, data) ->
+    expect = chai.expect
+    # test helpers
+    describe "Make Address Line 1", ->
+        it "should correctly form an address line with unit", ->
+            expect fillWith.makeAddressLine1 {
+                "AddressDetails.HomeAddress.LevelNumber" : ""
+                "AddressDetails.HomeAddress.UnitNumber" : "1234"
+                "AddressDetails.HomeAddress.StreetNumber" : "5678"
+                "AddressDetails.HomeAddress.StreetName" : "Oakmont"
+                "AddressDetails.HomeAddress.StreetType" : "DRIVE"
+                "AddressDetails.HomeAddress.BuildingName" : ""
+              }
+              .to.equal "U 1234 / 5678 Oakmont DRIVE"
+        it "should correctly form an address line without unit", ->
+            expect fillWith.makeAddressLine1 {
+                "AddressDetails.HomeAddress.LevelNumber" : ""
+                "AddressDetails.HomeAddress.UnitNumber" : ""
+                "AddressDetails.HomeAddress.StreetNumber" : "5678"
+                "AddressDetails.HomeAddress.StreetName" : "Oakmont"
+                "AddressDetails.HomeAddress.StreetType" : "DRIVE"
+                "AddressDetails.HomeAddress.BuildingName" : ""
+              }
+              .to.equal "5678 Oakmont DRIVE"
     # populate form with test data
     doc.fillWith data
     describe "First Name", ->
@@ -168,6 +147,10 @@ runTests = (doc, verify, data) ->
         it "should be populated by the test data", ->
             expect doc.find(verify["ContactDetails.Emails.Email.Address"]).val()
                 .to.equal data["ContactDetails.Emails.Email.Address"]
+    describe "Home Address Line 1", ->
+        it "should be populated by the test data", ->
+            expect doc.find(verify["AddressDetails.HomeAddress.Line1"]).val()
+                .to.equal fillWith.makeAddressLine1 data
     mocha.run()
 
 $(document).ready ->
@@ -176,4 +159,7 @@ $(document).ready ->
         .prependTo 'body'
         .text "Run tests"
         .click ->
-            runTests $("body"), verifydata[testformurl], testdata
+            if testformurl of verifydata
+                runTests $("body"), verifydata[testformurl], testdata
+            else
+                doc.fillWith data
