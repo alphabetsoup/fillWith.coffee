@@ -210,7 +210,7 @@
         }), function(el, v) {
           return $(el).val(v);
         }), new InputMatcher("PersonalDetails.BirthDate.Day", (function(_) {
-          return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date))").add(_.find("select:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)")).add(_.find(_.find("label:regex(text:,(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$))").attr("for")));
+          return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date))").add(_.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)")).add(_.find(_.find("label:regex(text:,(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$))").attr("for")));
         }), function(el, v) {
           if ($(el).is("input")) {
             return $(el).val(v);
@@ -219,6 +219,7 @@
               var daymatch, res;
               daymatch = new RegExp("0?" + escRE(v) + "$", "gi");
               res = $(e).val().match(daymatch);
+              console.log("Matching " + $(e).val() + " with " + v);
               if (!res) {
                 return true;
               } else if (res.length === 1) {
@@ -240,8 +241,9 @@
             return $(el).children("option").each(function(i, e) {
               var monthmatch, months_a, res;
               months_a = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-              monthmatch = new RegExp("^0?" + v + "$|^" + months_a[parseInt(v, 10) - 1], "gi");
+              monthmatch = new RegExp("^0?" + escRE(v) + "$|^" + months_a[parseInt(v, 10) - 1], "gi");
               res = $(e).val().match(monthmatch);
+              console.log("Matching " + $(e).val() + " with " + v);
               if (!res) {
                 return true;
               } else if (res.length === 1) {
@@ -262,8 +264,9 @@
           } else if ($(el).is("select")) {
             return $(el).children("option").each(function(i, e) {
               var res, yearmatch;
-              yearmatch = new RegExp("^" + v + "$", "gi");
+              yearmatch = new RegExp("^" + escRE(v) + "$", "gi");
               res = $(e).val().match(yearmatch);
+              console.log("Matching " + $(e).val() + " with " + v);
               if (!res) {
                 return true;
               } else if (res.length === 1) {

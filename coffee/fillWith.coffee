@@ -205,7 +205,7 @@ class InputMatcher
             new InputMatcher(
                 "PersonalDetails.BirthDate.Day", ((_) ->
                     _.find "input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date))"
-                    .add _.find "select:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)"
+                    .add _.find "select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)"
                     .add _.find _.find("label:regex(text:,(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$))").attr "for"
                 ), (el,v) ->
                     if $(el).is "input"
@@ -216,6 +216,7 @@ class InputMatcher
                             # try to match numeric only
                             daymatch = new RegExp "0?"+escRE(v)+"$", "gi"
                             res = $(e).val().match daymatch
+                            console.log "Matching "+$(e).val()+" with "+v
                             if !res
                                 return true
                             else if res.length == 1
@@ -252,8 +253,9 @@ class InputMatcher
                                 'nov'
                                 'dec'
                             ]
-                            monthmatch = new RegExp "^0?"+v+"$|^"+months_a[parseInt(v,10)-1], "gi"
+                            monthmatch = new RegExp "^0?"+escRE(v)+"$|^"+months_a[parseInt(v,10)-1], "gi"
                             res = $(e).val().match monthmatch
+                            console.log "Matching "+$(e).val()+" with "+v
                             if !res
                                 return true
                             else if res.length == 1
@@ -276,8 +278,9 @@ class InputMatcher
                         # parse select options
                         $(el).children("option").each (i,e) ->
                             # try to match numeric only
-                            yearmatch = new RegExp "^"+v+"$", "gi"
+                            yearmatch = new RegExp "^"+escRE(v)+"$", "gi"
                             res = $(e).val().match yearmatch
+                            console.log "Matching "+$(e).val()+" with "+v
                             if !res
                                 return true
                             else if res.length == 1
