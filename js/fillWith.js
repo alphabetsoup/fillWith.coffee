@@ -3,7 +3,10 @@
   var slice = [].slice;
 
   (function($, window) {
-    var FillWith, InputMatcher;
+    var FillWith, InputMatcher, escRE;
+    escRE = function(str) {
+      return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    };
     InputMatcher = (function() {
       function InputMatcher(name, _match_fn, _populate_fn) {
         this.name = name;
@@ -77,14 +80,14 @@
 
       FillWith.prototype.matchers = [
         new InputMatcher("PersonalDetails.Honorific", (function(_) {
-          return _.find("input:regex(name,honorific|prefix|title)").add(_.find("select:regex(name,honorific|prefix|title)")).add(_.find(_.find("label:regex(text:,^(honorific|prefix)$)").attr("for")));
+          return _.find("input:regex(name,honorific|prefix|title)").add(_.find("select:regex(name,honorific|prefix|title)")).add(_.find(_.find("label:regex(text:,honorific|prefix|title)").attr("for")));
         }), function(el, v) {
           if ($(el).is("input")) {
             return $(el).val(v);
           } else if ($(el).is("select")) {
             return $(el).children("option").each(function(i, e) {
               var res, titlematch;
-              titlematch = new RegExp("^" + v + "[^A-Za-z]?$", "gi");
+              titlematch = new RegExp("^" + escRE(v) + "[^A-Za-z]?$", "gi");
               res = $(e).val().match(titlematch);
               if (!res) {
                 return true;
@@ -123,7 +126,7 @@
           } else if ($(el).is("select")) {
             return $(el).children("option").each(function(i, e) {
               var daymatch, res;
-              daymatch = new RegExp("0?" + v + "$", "gi");
+              daymatch = new RegExp("0?" + escRE(v) + "$", "gi");
               res = $(e).val().match(daymatch);
               if (!res) {
                 return true;

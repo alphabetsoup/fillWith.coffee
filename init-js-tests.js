@@ -16,12 +16,15 @@ jQuery(document).ready(function($) {
         }
     };
     loadCSS(mochacssurl);
-    $.getScript(urlroot+'chai/chai.js');
-    $.getScript(urlroot+'mocha/mocha.js', function() {
-            $('<div />').prependTo('body').attr('id','mocha');
-            mocha.setup('bdd');
+    $.getScript(urlroot+'chai/chai.js', function() {
+        $.getScript(urlroot+'mocha/mocha.js', function() {
+             $('<div />').prependTo('body').attr('id','mocha');
+             mocha.setup('bdd');
+            $.getScript(urlroot+'js/regex-select.js',function() {
+                $.getScript(urlroot+'js/fillWith.js', function() {
+                    $.getScript(urlroot+'js/tests.js');
+                });
+            });
         });
-    $.getScript(urlroot+'js/regex-select.js');
-    $.getScript(urlroot+'js/fillWith.js');
-    $.getScript(urlroot+'js/tests.js');
+    });
 });

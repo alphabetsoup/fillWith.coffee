@@ -2,6 +2,10 @@
 #
 (($, window) ->
 
+    # Escape a string for injection into a RegExp
+    escRE = (str) ->
+          str.replace /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"
+
     class InputMatcher
         constructor: (@name, @_match_fn, @_populate_fn) ->
         match: (_) ->
@@ -69,7 +73,7 @@
                 "PersonalDetails.Honorific", ((_) ->
                     _.find "input:regex(name,honorific|prefix|title)"
                     .add _.find "select:regex(name,honorific|prefix|title)"
-                    .add _.find _.find("label:regex(text:,^(honorific|prefix)$)").attr "for"
+                    .add _.find _.find("label:regex(text:,honorific|prefix|title)").attr "for"
                 ), (el,v) ->
                     if $(el).is "input"
                         $(el).val v
@@ -77,7 +81,7 @@
                         # parse select options
                         $(el).children("option").each (i,e) -> 
                             # try to match numeric only, then alpha, then abbrev alpha
-                            titlematch = new RegExp "^"+v+"[^A-Za-z]?$", "gi"
+                            titlematch = new RegExp "^"+escRE(v)+"[^A-Za-z]?$", "gi"
                             res = $(e).val().match titlematch
                             if !res
                                 return true
@@ -129,7 +133,7 @@
                         # parse select options
                         $(el).children("option").each (i,e) -> 
                             # try to match numeric only
-                            daymatch = new RegExp "0?"+v+"$", "gi"
+                            daymatch = new RegExp "0?"+escRE(v)+"$", "gi"
                             res = $(e).val().match daymatch
                             if !res
                                 return true
@@ -208,6 +212,7 @@
         constructor: (el, options) ->
             @options = $.extend({}, @defaults, options)
             @$el = $(el)
+
 
     $.fn.extend fillWith: (option, args...) ->
         @each ->
