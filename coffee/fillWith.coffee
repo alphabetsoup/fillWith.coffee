@@ -216,7 +216,6 @@ class InputMatcher
                             # try to match numeric only
                             daymatch = new RegExp "0?"+escRE(v)+"$", "gi"
                             res = $(e).val().match daymatch
-                            console.log "Matching "+$(e).val()+" with "+v
                             if !res
                                 return true
                             else if res.length == 1
@@ -257,7 +256,6 @@ class InputMatcher
 
                             monthmatch = new RegExp "^0?"+escRE(v)+"$|^"+month_a_v, "gi"
                             res = $(e).val().match monthmatch
-                            console.log "Matching "+$(e).val()+" with "+v
 
                             month_a_el_v = months_a[parseInt($(e).val(),10)-1]
                             if month_a_el_v?
@@ -292,7 +290,6 @@ class InputMatcher
                             # try to match numeric only
                             yearmatch = new RegExp "^"+escRE(v)+"$", "gi"
                             res = $(e).val().match yearmatch
-                            console.log "Matching "+$(e).val()+" with "+v
                             if !res
                                 return true
                             else if res.length == 1

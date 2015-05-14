@@ -219,7 +219,6 @@
               var daymatch, res;
               daymatch = new RegExp("0?" + escRE(v) + "$", "gi");
               res = $(e).val().match(daymatch);
-              console.log("Matching " + $(e).val() + " with " + v);
               if (!res) {
                 return true;
               } else if (res.length === 1) {
@@ -245,7 +244,6 @@
               var month_a_el_v, monthmatch, monthmatch2, res, res2;
               monthmatch = new RegExp("^0?" + escRE(v) + "$|^" + month_a_v, "gi");
               res = $(e).val().match(monthmatch);
-              console.log("Matching " + $(e).val() + " with " + v);
               month_a_el_v = months_a[parseInt($(e).val(), 10) - 1];
               if (month_a_el_v != null) {
                 monthmatch2 = new RegExp("^0?" + escRE($(e).val()) + "$|^" + month_a_el_v, "gi");
@@ -274,7 +272,6 @@
               var res, yearmatch;
               yearmatch = new RegExp("^" + escRE(v) + "$", "gi");
               res = $(e).val().match(yearmatch);
-              console.log("Matching " + $(e).val() + " with " + v);
               if (!res) {
                 return true;
               } else if (res.length === 1) {
