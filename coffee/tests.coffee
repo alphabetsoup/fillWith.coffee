@@ -144,7 +144,7 @@ runTests = (doc, verify, data) ->
     describe "Birthdate Month", ->
         it "should be populated by the test data", ->
             expect convertMonthToNumber doc.find(verify["PersonalDetails.BirthDate.Month"]).val()
-                .to.equal data["PersonalDetails.BirthDate.Month"]
+                .to.equal convertMonthToNumber data["PersonalDetails.BirthDate.Month"]
     describe "Birthdate Year", ->
         it "should be populated by the test data", ->
             expect doc.find(verify["PersonalDetails.BirthDate.Year"]).val()

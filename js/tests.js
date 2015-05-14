@@ -157,7 +157,7 @@
     });
     describe("Birthdate Month", function() {
       return it("should be populated by the test data", function() {
-        return expect(convertMonthToNumber(doc.find(verify["PersonalDetails.BirthDate.Month"]).val())).to.equal(data["PersonalDetails.BirthDate.Month"]);
+        return expect(convertMonthToNumber(doc.find(verify["PersonalDetails.BirthDate.Month"]).val())).to.equal(convertMonthToNumber(data["PersonalDetails.BirthDate.Month"]));
       });
     });
     describe("Birthdate Year", function() {
