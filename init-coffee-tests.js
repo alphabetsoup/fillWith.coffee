@@ -16,47 +16,19 @@ jQuery(document).ready(function($) {
         }
     };
     loadCSS(mochacssurl);
-  //  loadCSS(extracssurl);
-    /*
-    $("head").prepend("<link>");;
-    var css = $("head").children(":first");
-    css.attr({
-      rel:  "stylesheet",
-      type: "text/plain",
-      href: "//" + urlrootnoproto + "mocha/mocha.css"
-    });
-    */
-    // assume jQuery has already loaded, otherwise this won't run.
-    /*
-    if (typeof test_staging != undefined) {
-        $('<script />').appendTo('head')
-                       .attr('type','text/javacsript')
-                       .attr('src',urlroot+'chai/chai.js?_='+$.now());
-        $('<script />').appendTo('head')
-                       .attr('type','text/javacsript')
-                       .attr('src',urlroot+'mocha/mocha.js?_='+$.now());
-        $('<div />').prependTo('body').attr('id','mocha');
-        var mochatimer = setInterval( function(){ 
-            if (typeof mocha != "undefined" && typeof chai != "undefined") {
-                clearInterval(mochatimer);
-                mocha.setup('bdd');
-            }
-        }, 200);
-    } else {
-    */
-        $.getScript(urlroot+'chai/chai.js');
-        $.getScript(urlroot+'mocha/mocha.js', function() {
-                $('<div />').prependTo('body').attr('id','mocha');
-                mocha.setup('bdd');
-            });
-        $.getScript(urlroot+'js/regex-select.js');
-    //}
+    $.getScript(urlroot+'chai/chai.js');
+    $.getScript(urlroot+'mocha/mocha.js', function() {
+            $('<div />').prependTo('body').attr('id','mocha');
+            mocha.setup('bdd');
+        });
+    $.getScript(urlroot+'js/regex-select.js');
+    
     $('<script />').appendTo('body')
                    .attr('type','text/coffeescript')
-                   .attr('src',urlroot+'js/fillWith.coffee?_='+$.now());
+                   .attr('src',urlroot+'coffee/fillWith.coffee?_='+$.now());
     $('<script />').appendTo('body')
                    .attr('type','text/coffeescript')
-                   .attr('src',urlroot+'js/tests.coffee?_='+$.now());
+                   .attr('src',urlroot+'coffee/tests.coffee?_='+$.now());
     $.getScript("https://cdn.rawgit.com/jashkenas/coffeescript/master/extras/coffee-script.js", function() {
 
         var timer = setInterval( function(){ 

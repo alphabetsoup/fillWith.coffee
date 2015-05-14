@@ -13,11 +13,13 @@ Copy the below and paste in the console of your favourite form.
             if(a || !g.readyState || /loaded|complete/.test(g.readyState) ) {
                 g.onload = g.onreadystatechange = null;
                 g = undefined;
-                if(!a) jQuery.getScript('https://rawgit.com/alphabetsoup/fillWith.coffee/master/init-tests.js');
+                if(!a) jQuery.getScript('https://rawgit.com/alphabetsoup/fillWith.coffee/master/init-js-tests.js');
             }
         };
         g.src = 'https://code.jquery.com/jquery-1.11.3.js'; 
     }(document, 'script'));
+
+If you want to try out in-browser coffeescript compilation, change `init-js-tests.js` to `init-coffee-tests.js` in the above snippet. Sadly, this will not work for all forms, but it is getting there.
 
 Some examples of good forms to fillWith.coffee are:
 

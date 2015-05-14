@@ -1,4 +1,4 @@
 *.swp
 logs
 logs/*
-js/tests_.coffee
+coffee/tests_.coffee
