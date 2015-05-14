@@ -77,7 +77,7 @@
                         # parse select options
                         $(el).children("option").each (i,e) -> 
                             # try to match numeric only, then alpha, then abbrev alpha
-                            titlematch = new RegExp v+"\\.?$", "gi"
+                            titlematch = new RegExp "^"+v+"[^A-Za-z]?$", "gi"
                             res = $(e).val().match titlematch
                             if !res
                                 return true
@@ -91,29 +91,29 @@
             )
             new InputMatcher(
                 "PersonalDetails.FirstName", ((_) ->
-                    _.find "input:regex(name,(^first.*name$|^name$))"
-                    .add _.find _.find("label:regex(text:,^first\\s*name$)").attr "for"
+                    _.find "input:regex(name,((first|given).*name|^name$))"
+                    .add _.find _.find("label:regex(text:,(first|given)\\s*name)").attr "for"
                 ), (el,v) ->
                     $(el).val v
             )
             new InputMatcher(
                 "PersonalDetails.MiddleName", ((_) ->
-                    _.find "input:regex(name,^middle.*names?$)"
-                    .add _.find _.find("label:regex(text:,^middle\\s*names?$)").attr "for"
+                    _.find "input:regex(name,middle.*names?)"
+                    .add _.find _.find("label:regex(text:,middle.*names?)").attr "for"
                 ), (el,v) ->
                     $(el).val v
             )
             new InputMatcher(
                 "PersonalDetails.MiddleName", ((_) ->
-                    _.find "input:regex(name,(^(?=middle.*)initial$))"
-                    .add _.find _.find("label:regex(text:,^middle\\s*names?$)").attr "for"
+                    _.find "input:regex(name,((middle.*|^)initials?))"
+                    .add _.find _.find("label:regex(text:,(middle.*|^)initials?)").attr "for"
                 ), (el,v) ->
                     $(el).val v.substring 0, 1
             )
             new InputMatcher(
                 "PersonalDetails.LastName", ((_) ->
-                    _.find "input:regex(name,^(last|sur).*names?$)"
-                    .add _.find _.find("label:regex(text:,^(last|sur)\\s*names?$)").attr "for"
+                    _.find "input:regex(name,(last|sur).*names?)"
+                    .add _.find _.find("label:regex(text:,(last|sur)\\s*names?)").attr "for"
                 ), (el,v) ->
                     $(el).val v
             )
@@ -190,7 +190,7 @@
                     else if $(el).is "select"
                         # parse select options
                         $(el).children("option").each (i,e) ->
-                            # try to match numeric only, then alpha, then abbrev alpha
+                            # try to match numeric only
                             yearmatch = new RegExp "^"+v+"$", "gi"
                             res = $(e).val().match yearmatch
                             if !res

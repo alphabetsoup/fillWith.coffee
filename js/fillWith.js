@@ -84,7 +84,7 @@
           } else if ($(el).is("select")) {
             return $(el).children("option").each(function(i, e) {
               var res, titlematch;
-              titlematch = new RegExp(v + "\\.?$", "gi");
+              titlematch = new RegExp("^" + v + "[^A-Za-z]?$", "gi");
               res = $(e).val().match(titlematch);
               if (!res) {
                 return true;
@@ -100,19 +100,19 @@
             });
           }
         }), new InputMatcher("PersonalDetails.FirstName", (function(_) {
-          return _.find("input:regex(name,(^first.*name$|^name$))").add(_.find(_.find("label:regex(text:,^first\\s*name$)").attr("for")));
+          return _.find("input:regex(name,((first|given).*name|^name$))").add(_.find(_.find("label:regex(text:,(first|given)\\s*name)").attr("for")));
         }), function(el, v) {
           return $(el).val(v);
         }), new InputMatcher("PersonalDetails.MiddleName", (function(_) {
-          return _.find("input:regex(name,^middle.*names?$)").add(_.find(_.find("label:regex(text:,^middle\\s*names?$)").attr("for")));
+          return _.find("input:regex(name,middle.*names?)").add(_.find(_.find("label:regex(text:,middle.*names?)").attr("for")));
         }), function(el, v) {
           return $(el).val(v);
         }), new InputMatcher("PersonalDetails.MiddleName", (function(_) {
-          return _.find("input:regex(name,(^(?=middle.*)initial$))").add(_.find(_.find("label:regex(text:,^middle\\s*names?$)").attr("for")));
+          return _.find("input:regex(name,((middle.*|^)initials?))").add(_.find(_.find("label:regex(text:,(middle.*|^)initials?)").attr("for")));
         }), function(el, v) {
           return $(el).val(v.substring(0, 1));
         }), new InputMatcher("PersonalDetails.LastName", (function(_) {
-          return _.find("input:regex(name,^(last|sur).*names?$)").add(_.find(_.find("label:regex(text:,^(last|sur)\\s*names?$)").attr("for")));
+          return _.find("input:regex(name,(last|sur).*names?)").add(_.find(_.find("label:regex(text:,(last|sur)\\s*names?)").attr("for")));
         }), function(el, v) {
           return $(el).val(v);
         }), new InputMatcher("PersonalDetails.BirthDate.Day", (function(_) {
