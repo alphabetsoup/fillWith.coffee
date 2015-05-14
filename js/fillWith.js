@@ -210,7 +210,7 @@
         }), function(el, v) {
           return $(el).val(v);
         }), new InputMatcher("PersonalDetails.BirthDate.Day", (function(_) {
-          return _.find("input:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)").add(_.find("select:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)")).add(_.find(_.find("label:regex(text:,(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$))").attr("for")));
+          return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date))").add(_.find("select:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)")).add(_.find(_.find("label:regex(text:,(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$))").attr("for")));
         }), function(el, v) {
           if ($(el).is("input")) {
             return $(el).val(v);
@@ -232,7 +232,7 @@
             });
           }
         }), new InputMatcher("PersonalDetails.BirthDate.Month", (function(_) {
-          return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)").add(_.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)")).add(_.find(_.find("label:regex(text:,(birth.*(month|mm)|^dob$|^d\\.o\\.b\\.?$))").attr("for")));
+          return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month))").add(_.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month))")).add(_.find(_.find("label:regex(text:,(birth.*(month|mm)|^dob$|^d\\.o\\.b\\.?$))").attr("for")));
         }), function(el, v) {
           if ($(el).is("input")) {
             return $(el).val(v);
@@ -255,7 +255,7 @@
             });
           }
         }), new InputMatcher("PersonalDetails.BirthDate.Year", (function(_) {
-          return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)").add(_.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)")).add(_.find(_.find("label:regex(text:,year|^dob$|^d\\.o\\.b\\.?$)").attr("for")));
+          return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year))").add(_.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year))")).add(_.find(_.find("label:regex(text:,year|^dob$|^d\\.o\\.b\\.?)").attr("for")));
         }), function(el, v) {
           if ($(el).is("input")) {
             return $(el).val(v);

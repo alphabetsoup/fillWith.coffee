@@ -204,7 +204,7 @@ class InputMatcher
             )
             new InputMatcher(
                 "PersonalDetails.BirthDate.Day", ((_) ->
-                    _.find "input:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)"
+                    _.find "input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date))"
                     .add _.find "select:regex(name,^(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)"
                     .add _.find _.find("label:regex(text:,(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$))").attr "for"
                 ), (el,v) ->
@@ -228,8 +228,8 @@ class InputMatcher
             )
             new InputMatcher(
                 "PersonalDetails.BirthDate.Month", ((_) ->
-                    _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)")
-                    .add _.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)$)")
+                    _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month))")
+                    .add _.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month))")
                     .add _.find _.find("label:regex(text:,(birth.*(month|mm)|^dob$|^d\\.o\\.b\\.?$))").attr "for"
                 ), (el,v) ->
                     if $(el).is "input"
@@ -266,9 +266,9 @@ class InputMatcher
             )
             new InputMatcher(
                 "PersonalDetails.BirthDate.Year", ((_) ->
-                    _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)")
-                    .add _.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)$)")
-                    .add _.find _.find("label:regex(text:,year|^dob$|^d\\.o\\.b\\.?$)").attr "for"
+                    _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year))")
+                    .add _.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year))")
+                    .add _.find _.find("label:regex(text:,year|^dob$|^d\\.o\\.b\\.?)").attr "for"
                 ), (el,v) ->
                     if $(el).is "input"
                         $(el).val v
