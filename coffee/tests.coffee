@@ -159,6 +159,14 @@ runTests = (doc, verify, data) ->
                 .to.equal fillWith.makeAddressLine1 data
     mocha.run()
 
+getClosestProperty = (obj, propName) ->
+  key = undefined
+  for key of obj
+    re = new RegExp fillWith.escRE(key), 'i'
+    if re.test(propName)
+      return obj[key]
+  null
+
 $(document).ready ->
     testformurl = if typeof test_staging == "undefined" then window.location.href else "https://info.bpiexpressonline.com/bpiprod/eolappli.nsf/CreditCardApplicationForm?OpenForm"
     fillbox = $ '<div />'
@@ -184,9 +192,10 @@ $(document).ready ->
         .appendTo fillbox
         .text "Run tests (does not use data in the box to the left)"
         .click ->
-            if testformurl of verifydata
-                runTests $("body"), verifydata[testformurl], testdata
+            vdata = getClosestProperty verifydata, testformurl
+            if vdata
+                runTests $("body"), vdata, testdata
             else
                 $ 'body'
-                    .fillWith data
+                    .fillWith testdata
     fillbox.prependTo 'body'

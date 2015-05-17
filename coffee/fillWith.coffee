@@ -42,10 +42,9 @@ window.fillWith =
                 line += data[usefields.st]
         # remove trailing space
         line.replace /\s+$/g, ""
-
-# Escape a string for injection into a RegExp
-escRE = (str) ->
-      str.replace /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"
+    # Escape a string for injection into a RegExp
+    escRE: (str) ->
+        str.replace /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"
 
 ##
 # @name           InputMatcher
@@ -181,7 +180,7 @@ class InputMatcher
                         # parse select options
                         $(el).children("option").each (i,e) ->
                             # try to match numeric only, then alpha, then abbrev alpha
-                            titlematch = new RegExp "^"+escRE(v)+"[^A-Za-z]?$", "gi"
+                            titlematch = new RegExp "^"+fillWith.escRE(v)+"[^A-Za-z]?$", "gi"
                             res = $(e).val().match titlematch
                             if !res
                                 return true
@@ -254,7 +253,7 @@ class InputMatcher
                         # parse select options
                         $(el).children("option").each (i,e) -> 
                             # try to match numeric only
-                            daymatch = new RegExp "0?"+escRE(v)+"$", "gi"
+                            daymatch = new RegExp "0?"+fillWith.escRE(v)+"$", "gi"
                             res = $(e).val().match daymatch
                             if !res
                                 return true
@@ -299,14 +298,14 @@ class InputMatcher
                         $(el).children("option").each (i,e) ->
                             # try to match numeric only, then alpha/abbrev alpha
 
-                            monthmatch = new RegExp "^0?"+escRE(v)+"$|^"+month_a_v, "gi"
+                            monthmatch = new RegExp "^0?"+fillWith.escRE(v)+"$|^"+month_a_v, "gi"
                             res = $(e).val().match monthmatch
 
                             month_a_el_v = months_a[parseInt($(e).val(),10)-1]
                             if month_a_el_v?
-                                monthmatch2 = new RegExp "^0?"+escRE($(e).val())+"$|^"+month_a_el_v, "gi"
+                                monthmatch2 = new RegExp "^0?"+fillWith.escRE($(e).val())+"$|^"+month_a_el_v, "gi"
                             else
-                                monthmatch2 = new RegExp "^0?"+escRE($(e).val())+"$", "gi"
+                                monthmatch2 = new RegExp "^0?"+fillWith.escRE($(e).val())+"$", "gi"
                             res2 = v.match monthmatch2
                             res = if res then res else []
                             res2 = if res2 then res2 else []
@@ -338,7 +337,7 @@ class InputMatcher
                         # parse select options
                         $(el).children("option").each (i,e) ->
                             # try to match numeric only
-                            yearmatch = new RegExp "^"+escRE(v)+"$", "gi"
+                            yearmatch = new RegExp "^"+fillWith.escRE(v)+"$", "gi"
                             res = $(e).val().match yearmatch
                             if !res
                                 return true
