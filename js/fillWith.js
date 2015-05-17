@@ -67,9 +67,8 @@
   };
 
   InputMatcher = (function() {
-    function InputMatcher(names, _match_fn, _match_options, _populate_fn) {
+    function InputMatcher(names, _match_options, _populate_fn) {
       this.names = names;
-      this._match_fn = _match_fn;
       this._match_options = _match_options;
       this._populate_fn = _populate_fn;
       this._match_options = $.extend({
@@ -96,12 +95,6 @@
     };
 
     InputMatcher.prototype.match = function(_) {
-      var mm;
-      mm = this._match_fn(_);
-      return mm;
-    };
-
-    InputMatcher.prototype.match2 = function(_) {
       var res;
       res = $([]);
       $.each(this._match_options.include, function(i, e) {
@@ -116,7 +109,7 @@
         if (i === "label_for") {
           res = res.not(res.find("label:regex(text:," + e + ")").attr("for"));
         } else {
-          res = res.not("input:regex(name," + e + ")");
+          res = res.not(i + ":regex(name," + e + ")");
         }
         return true;
       });
@@ -197,9 +190,7 @@
       };
 
       FillWith.prototype.matchers = [
-        new InputMatcher("PersonalDetails.Honorific", (function(_) {
-          return _.find("input:regex(name,honorific|prefix|title)").add(_.find("select:regex(name,honorific|prefix|title)")).add(_.find(_.find("label:regex(text:,honorific|prefix|title)").attr("for")));
-        }), {
+        new InputMatcher("PersonalDetails.Honorific", {
           include: {
             input: "honorific|prefix|title",
             select: "honorific|prefix|title",
@@ -207,6 +198,7 @@
           },
           exclude: {
             input: "sp|sup",
+            select: "sp|sup",
             label_for: "spouse|supplementary"
           }
         }, function(el, v) {
@@ -230,9 +222,7 @@
               }
             });
           }
-        }), new InputMatcher("PersonalDetails.FirstName", (function(_) {
-          return _.find("input:regex(name,((first|given).*name|^name$))").add(_.find(_.find("label:regex(text:,(first|given)\\s*name)").attr("for")));
-        }), {
+        }), new InputMatcher("PersonalDetails.FirstName", {
           include: {
             input: "((first|given).*name|^name$)",
             label_for: "(first|given)\\s*name"
@@ -243,9 +233,7 @@
           }
         }, function(el, v) {
           return $(el).val(v);
-        }), new InputMatcher("PersonalDetails.MiddleName", (function(_) {
-          return _.find("input:regex(name,middle.*names?)").add(_.find(_.find("label:regex(text:,middle.*names?)").attr("for")));
-        }), {
+        }), new InputMatcher("PersonalDetails.MiddleName", {
           include: {
             input: "middle.*names?",
             label_for: "middle.*names?"
@@ -256,9 +244,7 @@
           }
         }, function(el, v) {
           return $(el).val(v);
-        }), new InputMatcher("PersonalDetails.MiddleName", (function(_) {
-          return _.find("input:regex(name,((middle.*|^)initials?))").add(_.find(_.find("label:regex(text:,(middle.*|^)initials?)").attr("for")));
-        }), {
+        }), new InputMatcher("PersonalDetails.MiddleName", {
           include: {
             input: "((middle.*|^)initials?)",
             label_for: "((middle.*|^)initials?)"
@@ -269,9 +255,7 @@
           }
         }, function(el, v) {
           return $(el).val(v.substring(0, 1));
-        }), new InputMatcher("PersonalDetails.LastName", (function(_) {
-          return _.find("input:regex(name,(last|sur).*names?)").add(_.find(_.find("label:regex(text:,(last|sur)\\s*names?)").attr("for")));
-        }), {
+        }), new InputMatcher("PersonalDetails.LastName", {
           include: {
             input: "(last|sur).*names?",
             label_for: "(last|sur)\\s*names?"
@@ -282,13 +266,16 @@
           }
         }, function(el, v) {
           return $(el).val(v);
-        }), new InputMatcher("PersonalDetails.BirthDate.Day", (function(_) {
-          return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date))").add(_.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)")).add(_.find(_.find("label:regex(text:,(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$))").attr("for")));
-        }), {
+        }), new InputMatcher("PersonalDetails.BirthDate.Day", {
           include: {
             input: "(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)",
             select: "(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)",
             label_for: "(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$)"
+          },
+          exclude: {
+            input: "sp|sup",
+            select: "sp|sup",
+            label_for: "spouse|supplementary"
           }
         }, function(el, v) {
           if ($(el).is("input")) {
@@ -310,13 +297,16 @@
               }
             });
           }
-        }), new InputMatcher("PersonalDetails.BirthDate.Month", (function(_) {
-          return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month))").add(_.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month))")).add(_.find(_.find("label:regex(text:,(birth.*(month|mm)|^dob$|^d\\.o\\.b\\.?$))").attr("for")));
-        }), {
+        }), new InputMatcher("PersonalDetails.BirthDate.Month", {
           include: {
             input: "(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)",
             select: "(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)",
             label_for: "(birth.*(month|mm)|^dob$|^d\\.o\\.b\\.?$)"
+          },
+          exclude: {
+            input: "sp|sup",
+            select: "sp|sup",
+            label_for: "spouse|supplementary"
           }
         }, function(el, v) {
           var month_a_v, months_a;
@@ -347,13 +337,16 @@
               }
             });
           }
-        }), new InputMatcher("PersonalDetails.BirthDate.Year", (function(_) {
-          return _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year))").add(_.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year))")).add(_.find(_.find("label:regex(text:,year|^dob$|^d\\.o\\.b\\.?)").attr("for")));
-        }), {
+        }), new InputMatcher("PersonalDetails.BirthDate.Year", {
           include: {
             input: "(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)",
             select: "(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)",
             label_for: "year|^dob$|^d\\.o\\.b\\.?"
+          },
+          exclude: {
+            input: "sp|sup",
+            select: "sp|sup",
+            label_for: "spouse|supplementary"
           }
         }, function(el, v) {
           if ($(el).is("input")) {
@@ -375,22 +368,18 @@
               }
             });
           }
-        }), new InputMatcher(["AddressDetails.HomeAddress.LevelNumber", "AddressDetails.HomeAddress.UnitNumber", "AddressDetails.HomeAddress.StreetNumber", "AddressDetails.HomeAddress.StreetName", "AddressDetails.HomeAddress.StreetType", "AddressDetails.HomeAddress.BuildingName"], (function(_) {
-          return _.find("input:regex(name,(add|address))").add(_.find(_.find("label:regex(text:,(add|address))").attr("for")));
-        }), {
+        }), new InputMatcher(["AddressDetails.HomeAddress.LevelNumber", "AddressDetails.HomeAddress.UnitNumber", "AddressDetails.HomeAddress.StreetNumber", "AddressDetails.HomeAddress.StreetName", "AddressDetails.HomeAddress.StreetType", "AddressDetails.HomeAddress.BuildingName"], {
           include: {
             input: "add|address",
             label_for: "add|address"
           },
           exclude: {
-            input: "permanent|(2|two)|billing|suburb|city",
-            label_for: "permanent|(2|two)|billing|suburb|city"
+            input: "permanent|code|(2|two)|billing|suburb|city",
+            label_for: "permanent|code|(2|two)|billing|suburb|city"
           }
         }, function(el, vals) {
           return $(el).val(fillWith.makeAddressLine1(vals));
-        }), new InputMatcher("ContactDetails.Emails.Email.Address", (function(_) {
-          return _.find("input:regex(name,email|^eadd)").add(_.find(_.find("label:regex(text:,email|^eadd)").attr("for")));
-        }), {
+        }), new InputMatcher("ContactDetails.Emails.Email.Address", {
           include: {
             input: "email|^eadd",
             label_for: "email"
@@ -424,7 +413,7 @@
           }
           return $.each(data.matchers, function(_, matcher) {
             var el;
-            el = matcher.match2($this);
+            el = matcher.match($this);
             el.css({
               'background-color': '#00CC99'
             });
