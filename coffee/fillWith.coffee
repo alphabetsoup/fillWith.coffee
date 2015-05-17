@@ -47,6 +47,7 @@ window.fillWith =
 escRE = (str) ->
       str.replace /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"
 
+##
 # @name           InputMatcher
 # @description    Matches an input using a match callback and 
 #                 populates an element using a populate callback and
@@ -57,13 +58,18 @@ escRE = (str) ->
 #                 Propose to use a multi-pass matcher
 #                   1) Use a loose jQuery input/select + regex selector to obtain
 #                      a list of likely fields.
+#                        { include: 
+#                           {input: <regex_string>, select: <re_s>, label_for: <re_s>}, 
+#                           exclude: {input: <re_s>, etc}
+#                        }
 #                   2) Evaluate likelihood of each field using an n-gram style weight
 #                      applied to the field name and surrounding html elements.
 #                      Can use negative weights
 #                   3) Return the first n largest matches, where n is specified 
 #                      (usually 1).
 class InputMatcher
-    constructor: (@names, @_match_fn, @_populate_fn) ->
+    constructor: (@names, @_match_fn, @_match_options, @_populate_fn) ->
+        @_match_options = $.extend { include: { }, exclude: { } }, @_match_options
     hasFields: (fields) ->
         if typeof fields is not 'array' then throw new "hasFields requires array as first argument."
         if typeof @names is 'string'
@@ -79,6 +85,21 @@ class InputMatcher
         #m = mm.first()
         #console.log m
         mm
+    match2: (_) ->
+        res = $ []
+        $.each @_match_options.include, (i,e) ->
+            if i == "label_for"
+                res = res.add _.find _.find("label:regex(text:,"+e+")").attr "for"
+            else
+                res = res.add _.find i+":regex(name,"+e+")"
+            true
+        $.each @_match_options.exclude, (i,e) ->
+            if i == "label_for"
+                res = res.not res.find("label:regex(text:,"+e+")").attr "for"
+            else
+                res = res.not "input:regex(name,"+e+")"
+            true
+        res
     populate: (el,v) ->
         # pass either a single string or a hash of keys/values to pop fn
         if typeof @names is 'string'
@@ -155,7 +176,15 @@ class InputMatcher
                     _.find "input:regex(name,honorific|prefix|title)"
                     .add _.find "select:regex(name,honorific|prefix|title)"
                     .add _.find _.find("label:regex(text:,honorific|prefix|title)").attr "for"
-                ), (el,v) ->
+                ), {
+                     include:
+                         input: "honorific|prefix|title"
+                         select: "honorific|prefix|title"
+                         label_for: "honorific|prefix|title"
+                     exclude:
+                         input: "sp|sup"
+                         label_for: "spouse|supplementary"
+                }, (el,v) ->
                     if $(el).is "input"
                         $(el).val v
                     else if $(el).is "select"
@@ -178,28 +207,56 @@ class InputMatcher
                 "PersonalDetails.FirstName", ((_) ->
                     _.find "input:regex(name,((first|given).*name|^name$))"
                     .add _.find _.find("label:regex(text:,(first|given)\\s*name)").attr "for"
-                ), (el,v) ->
+                ), {
+                     include:
+                         input: "((first|given).*name|^name$)"
+                         label_for: "(first|given)\\s*name"
+                     exclude:
+                         input: "sp|sup"
+                         label_for: "spouse|supplementary"
+                }, (el,v) ->
                     $(el).val v
             )
             new InputMatcher(
                 "PersonalDetails.MiddleName", ((_) ->
                     _.find "input:regex(name,middle.*names?)"
                     .add _.find _.find("label:regex(text:,middle.*names?)").attr "for"
-                ), (el,v) ->
+                ), {
+                     include:
+                         input: "middle.*names?"
+                         label_for: "middle.*names?"
+                     exclude:
+                         input: "sp|sup"
+                         label_for: "spouse|supplementary"
+                }, (el,v) ->
                     $(el).val v
             )
             new InputMatcher(
                 "PersonalDetails.MiddleName", ((_) ->
                     _.find "input:regex(name,((middle.*|^)initials?))"
                     .add _.find _.find("label:regex(text:,(middle.*|^)initials?)").attr "for"
-                ), (el,v) ->
+                ), {
+                     include:
+                         input: "((middle.*|^)initials?)"
+                         label_for: "((middle.*|^)initials?)"
+                     exclude:
+                         input: "sp|sup"
+                         label_for: "spouse|supplementary"
+                }, (el,v) ->
                     $(el).val v.substring 0, 1
             )
             new InputMatcher(
                 "PersonalDetails.LastName", ((_) ->
                     _.find "input:regex(name,(last|sur).*names?)"
                     .add _.find _.find("label:regex(text:,(last|sur)\\s*names?)").attr "for"
-                ), (el,v) ->
+                ), {
+                     include:
+                         input: "(last|sur).*names?"
+                         label_for: "(last|sur)\\s*names?"
+                     exclude:
+                         input: "sp|sup"
+                         label_for: "spouse|supplementary"
+                }, (el,v) ->
                     $(el).val v
             )
             new InputMatcher(
@@ -207,7 +264,12 @@ class InputMatcher
                     _.find "input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date))"
                     .add _.find "select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)$)"
                     .add _.find _.find("label:regex(text:,(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$))").attr "for"
-                ), (el,v) ->
+                ), {
+                     include:
+                         input: "(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)"
+                         select: "(birth|dob|d\\.o\\.b\\.?).*(dd|d|day|date)"
+                         label_for: "(birth.*(day|date)|^dob$|^d\\.o\\.b\\.?$)"
+                }, (el,v) ->
                     if $(el).is "input"
                         $(el).val v
                     else if $(el).is "select"
@@ -231,7 +293,12 @@ class InputMatcher
                     _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month))")
                     .add _.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(mm|m|month))")
                     .add _.find _.find("label:regex(text:,(birth.*(month|mm)|^dob$|^d\\.o\\.b\\.?$))").attr "for"
-                ), (el,v) ->
+                ), {
+                     include:
+                         input: "(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)"
+                         select: "(birth|dob|d\\.o\\.b\\.?).*(mm|m|month)"
+                         label_for: "(birth.*(month|mm)|^dob$|^d\\.o\\.b\\.?$)"
+                }, (el,v) ->
                     if $(el).is "input"
                         $(el).val v
                     else if $(el).is "select"
@@ -281,7 +348,12 @@ class InputMatcher
                     _.find("input:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year))")
                     .add _.find("select:regex(name,(birth|dob|d\\.o\\.b\\.?).*(yy|y|year))")
                     .add _.find _.find("label:regex(text:,year|^dob$|^d\\.o\\.b\\.?)").attr "for"
-                ), (el,v) ->
+                ), {
+                     include:
+                         input: "(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)"
+                         select: "(birth|dob|d\\.o\\.b\\.?).*(yy|y|year)"
+                         label_for: "year|^dob$|^d\\.o\\.b\\.?"
+                }, (el,v) ->
                     if $(el).is "input"
                         $(el).val v
                     else if $(el).is "select"
@@ -312,14 +384,25 @@ class InputMatcher
                 , ((_) ->
                     _.find "input:regex(name,(add|address))"
                     .add _.find _.find("label:regex(text:,(add|address))").attr "for"
-                ), (el,vals) ->
+                ), {
+                     include:
+                         input: "add|address"
+                         label_for: "add|address"
+                     exclude:
+                         input: "permanent|postal|(2|two)|billing|suburb|city"
+                         label_for: "permanent|postal|(2|two)|billing|suburb|city"
+                }, (el,vals) ->
                     $(el).val fillWith.makeAddressLine1 vals
             )
             new InputMatcher(
                 "ContactDetails.Emails.Email.Address", ((_) ->
                     _.find "input:regex(name,email|^eadd)"
                     .add _.find _.find("label:regex(text:,email|^eadd)").attr "for"
-                ), (el,v) ->
+                ), {
+                     include:
+                         input: "email|^eadd"
+                         label_for: "email"
+                }, (el,v) ->
                     $(el).val v
             )
         ]
@@ -340,7 +423,7 @@ class InputMatcher
                 data[option].apply(data, args)
 
             $.each data.matchers, (_, matcher) ->
-                el = matcher.match $this
+                el = matcher.match2 $this
                 el.css({'background-color' : '#00CC99'})
                 if matcher.hasFields data.options
                     # set the value
