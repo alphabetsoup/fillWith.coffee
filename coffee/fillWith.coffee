@@ -389,8 +389,8 @@ class InputMatcher
                          input: "add|address"
                          label_for: "add|address"
                      exclude:
-                         input: "permanent|postal|(2|two)|billing|suburb|city"
-                         label_for: "permanent|postal|(2|two)|billing|suburb|city"
+                         input: "permanent|(2|two)|billing|suburb|city"
+                         label_for: "permanent|(2|two)|billing|suburb|city"
                 }, (el,vals) ->
                     $(el).val fillWith.makeAddressLine1 vals
             )

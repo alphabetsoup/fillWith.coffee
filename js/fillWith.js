@@ -383,8 +383,8 @@
             label_for: "add|address"
           },
           exclude: {
-            input: "permanent|postal|(2|two)|billing|suburb|city",
-            label_for: "permanent|postal|(2|two)|billing|suburb|city"
+            input: "permanent|(2|two)|billing|suburb|city",
+            label_for: "permanent|(2|two)|billing|suburb|city"
           }
         }, function(el, vals) {
           return $(el).val(fillWith.makeAddressLine1(vals));
