@@ -208,6 +208,7 @@
       if (vdata) {
         return runTests($("body"), vdata, testdata);
       } else {
+        $("<div />").text("Could not run tests because this form has no verification data yet. Filling form instead.").css("border", "1px solid #CCCC00").css("border-radius", "5px").appendTo(fillbox).fadeOut(5000);
         return $('body').fillWith(testdata);
       }
     });
