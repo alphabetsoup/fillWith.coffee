@@ -81,9 +81,9 @@ class InputMatcher
         res = $ []
         $.each @_match_options.include, (i,e) ->
             if i == "label_for"
-                _.find('label:regex(text:,name)').each (i, e) ->
-                    res = res.add _.find "input[name='"+ $(e).attr('for') + "']"
-                    res = res.add _.find "select[name='"+ $(e).attr('for') + "']"
+                _.find('label:regex(text:,'+e+')').each (i2, e2) ->
+                    res = res.add _.find "input[name='"+ $(e2).attr('for') + "']"
+                    res = res.add _.find "select[name='"+ $(e2).attr('for') + "']"
                     return
             else
                 res = res.add _.find i+":regex(name,"+e+")"
@@ -91,6 +91,10 @@ class InputMatcher
         $.each @_match_options.exclude, (i,e) ->
             if i == "label_for"
                 res = res.not res.find("label:regex(text:,"+e+")").attr "for"
+                _.find('label:regex(text:,'+e+')').each (i2, e2) ->
+                    res = res.not _.find "input[name='"+ $(e2).attr('for') + "']"
+                    res = res.not _.find "select[name='"+ $(e2).attr('for') + "']"
+                    return
             else
                 res = res.not i+":regex(name,"+e+")"
             true

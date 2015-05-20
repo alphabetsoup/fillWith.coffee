@@ -98,9 +98,9 @@
       res = $([]);
       $.each(this._match_options.include, function(i, e) {
         if (i === "label_for") {
-          _.find('label:regex(text:,name)').each(function(i, e) {
-            res = res.add(_.find("input[name='" + $(e).attr('for') + "']"));
-            res = res.add(_.find("select[name='" + $(e).attr('for') + "']"));
+          _.find('label:regex(text:,' + e + ')').each(function(i2, e2) {
+            res = res.add(_.find("input[name='" + $(e2).attr('for') + "']"));
+            res = res.add(_.find("select[name='" + $(e2).attr('for') + "']"));
           });
         } else {
           res = res.add(_.find(i + ":regex(name," + e + ")"));
@@ -110,6 +110,10 @@
       $.each(this._match_options.exclude, function(i, e) {
         if (i === "label_for") {
           res = res.not(res.find("label:regex(text:," + e + ")").attr("for"));
+          _.find('label:regex(text:,' + e + ')').each(function(i2, e2) {
+            res = res.not(_.find("input[name='" + $(e2).attr('for') + "']"));
+            res = res.not(_.find("select[name='" + $(e2).attr('for') + "']"));
+          });
         } else {
           res = res.not(i + ":regex(name," + e + ")");
         }
