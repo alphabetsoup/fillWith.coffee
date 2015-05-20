@@ -123,6 +123,24 @@ runTests = (doc, verify, data) ->
                 "AddressDetails.HomeAddress.BuildingName" : ""
               }
               .to.equal "5678 Oakmont DRIVE"
+    # Assuming the relevant Honorific InputMatcher and specs have already been written
+    describe "Honorific selected option", ->
+        before ->
+            $ '<select name="'+verify['PersonalDetails.Honorific']+'"
+            id="temptitletest"></select>'
+                .append '<option value="MRS">MRS</option>'
+                .append '<option value="MR">MR</option>'
+                .appendTo 'body'
+            $ 'body'
+                .fillWith data
+        after ->
+            $ 'body'
+                .remove '#temptitletest'
+        it "should match correctly in an unusually ordered list", ->
+            $('body').find(verify['PersonalDetails.Honorific']).each
+            (i,e) ->
+                expect e.val()
+                    .to.equal data['PersonalDetails.Honorific']
     # populate form with test data
     doc.fillWith data
     describe "First Name", ->

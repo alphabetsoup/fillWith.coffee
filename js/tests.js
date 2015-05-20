@@ -134,6 +134,21 @@
         })).to.equal("5678 Oakmont DRIVE");
       });
     });
+    describe("Honorific selected option", function() {
+      before(function() {
+        $('<select name="' + verify['PersonalDetails.Honorific'] + '" id="temptitletest"></select>').append('<option value="MRS">MRS</option>').append('<option value="MR">MR</option>').appendTo('body');
+        return $('body').fillWith(data);
+      });
+      after(function() {
+        return $('body').remove('#temptitletest');
+      });
+      return it("should match correctly in an unusually ordered list", function() {
+        $('body').find(verify['PersonalDetails.Honorific']).each;
+        return function(i, e) {
+          return expect(e.val()).to.equal(data['PersonalDetails.Honorific']);
+        };
+      });
+    });
     doc.fillWith(data);
     describe("First Name", function() {
       return it("should be populated by the test data", function() {

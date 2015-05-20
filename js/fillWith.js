@@ -98,7 +98,10 @@
       res = $([]);
       $.each(this._match_options.include, function(i, e) {
         if (i === "label_for") {
-          res = res.add(_.find(_.find("label:regex(text:," + e + ")").attr("for")));
+          _.find('label:regex(text:,name)').each(function(i, e) {
+            res = res.add(_.find("input[name='" + $(e).attr('for') + "']"));
+            res = res.add(_.find("select[name='" + $(e).attr('for') + "']"));
+          });
         } else {
           res = res.add(_.find(i + ":regex(name," + e + ")"));
         }
@@ -373,8 +376,8 @@
             label_for: "add|address"
           },
           exclude: {
-            input: "permanent|code|(2|two)|billing|suburb|city",
-            label_for: "permanent|code|(2|two)|billing|suburb|city"
+            input: "post|permanent|code|(2|two)|billing|suburb|city",
+            label_for: "post|permanent|code|(2|two)|billing|suburb|city"
           }
         }, function(el, vals) {
           return $(el).val(fillWith.makeAddressLine1(vals));
